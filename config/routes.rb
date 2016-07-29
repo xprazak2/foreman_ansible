@@ -11,6 +11,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :ansible_files, :only => [:index, :edit, :update, :destroy] do
+       collection do
+        get 'auto_complete_search'
+      end
+    end
+
     resources :ansible_roles, :only => [:index, :destroy] do
       collection do
         get :import

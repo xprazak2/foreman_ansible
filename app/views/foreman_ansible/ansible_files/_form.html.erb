@@ -1,0 +1,28 @@
+<%= form_for @file, :url => hash_for_ansible_file_path(:id => @file.id), :html => { :multipart => true, :onsubmit => 'submit_code();' } do |f| %>
+  <%= base_errors_for @file %>
+  <div class="tab-content">
+    <div>
+      <div class='form-group'>
+        <div class="col-md-12">
+            <label class="control-label"  for="file"><%= _("File editor") %></label>
+        </div>
+
+        <div class="col-md-12">
+          <div class="editor-container">
+            <%= render :partial => 'editor/toolbar', :locals => { :show_preview => false } %>
+
+            <%= textarea_f f, :content, :class => "editor_source", :label =>:none, :size => "max",
+                            :'data-file-name' => @file.name %>
+          </div>
+        </div>
+      </div>
+
+      <%= file_field_f f, :content, :class => "editor_file_source",:size => "col-md-10", :id => 'ansible_file_content',
+                       :help_block  => _("Selecting a file will override the editor and load the file instead") %>
+    </div>
+
+    <%= submit_or_cancel f, false, :cancel_path => hash_for_ansible_files_path(:search => files_for_role(@file.ansible_role, @file.dir)) %>
+  </div>
+  <input type="hidden" id="old" value="<%= @file.content %>" />
+  <input type="hidden" id="new" value="<%= @file.content %>" />
+<% end %>

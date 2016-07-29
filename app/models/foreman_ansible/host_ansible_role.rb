@@ -4,7 +4,7 @@ module ForemanAnsible
     audited :associated_with => :host, :allow_mass_assignment => true
 
     belongs_to_host
-    belongs_to :ansible_role
+    belongs_to :ansible_role, :class_name => "ForemanAnsible::AnsibleRole"
 
     validates :ansible_role_id, :presence => true,
                                 :uniqueness => { :scope => :host_id }
