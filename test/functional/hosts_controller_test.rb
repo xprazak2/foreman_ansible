@@ -19,7 +19,7 @@ class HostsControllerExtensionsTest < ActionController::TestCase
 
   test 'update a host with ansible roles' do
     host = FactoryGirl.create(:host, :managed => false)
-    post :update, { :id => host.id, :ansible_role_ids => [@role.id] },
+    post :update, { :id => host.id, :host => { :ansible_role_ids => [@role.id] } },
       set_session_user
     assert_redirected_to host_url(assigns('host'))
     assert assigns('host').ansible_roles, [@role]

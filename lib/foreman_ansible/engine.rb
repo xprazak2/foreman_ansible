@@ -9,11 +9,16 @@ module ForemanAnsible
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
     config.autoload_paths += Dir["#{config.root}/app/services"]
     config.autoload_paths += Dir["#{config.root}/app/views"]
+    config.autoload_paths += Dir["#{config.root}/app/lib"]
 
     initializer 'foreman_ansible.register_plugin', :before => :finisher_hook do
       Foreman::Plugin.register :foreman_ansible do
         # We need ActiveJob, only available post-1.12 because of Rails 4.2
         requires_foreman '>= 1.12'
+
+        divider :top_menu, :caption => N_('Ansible'), :parent => :configure_menu
+        menu :top_menu, :ansible_roles, :caption => N_('Roles'),
+          :url_hash => { :controller => 'foreman_ansible/ansible_roles', :action => :index }, :parent => :configure_menu
       end
     end
 
@@ -37,5 +42,9 @@ module ForemanAnsible
         Rails.logger.warn "Foreman Ansible: skipping engine hook (#{e})"
       end
     end
+  end
+
+  def self.use_relative_model_naming?
+    true
   end
 end
