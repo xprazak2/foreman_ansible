@@ -8,12 +8,15 @@ module ForemanAnsible
     end
 
     def update(ansible_file)
-      res = proxy_api.update_file(ansible_file.ansible_role.name, ansible_file.dir, ansible_file.name, ansible_file.content)
-      res['updated']
+      proxy_api.update_file(ansible_file.ansible_role.name, ansible_file.dir, ansible_file.name, ansible_file.content)
     end
 
     def delete(ansible_file)
       proxy_api.delete_file(ansible_file.ansible_role.name, ansible_file.dir, ansible_file.name)
+    end
+
+    def create(ansible_file)
+      proxy_api.create_file(ansible_file.ansible_role.name, ansible_file.dir, ansible_file.name, ansible_file.content)
     end
   end
 end

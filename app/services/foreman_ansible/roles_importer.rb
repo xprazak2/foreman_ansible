@@ -9,18 +9,26 @@ module ForemanAnsible
     end
 
     def finish_import(changes)
-      create_new_roles changes
-      delete_old_roles changes
+      create_new_roles changes['new'] if changes['new']
+      delete_old_roles changes['obsolete'] if changes['obsolete']
     end
 
-    def create_new_roles(changes)
-      changes['new'].values.each do |new_role|
-        AnsibleRole.create(JSON.parse new_role)
+    def create_new_roles(changes_new)
+      changes_new.values.each do |new_role|
+        role_hash = JSON.parse new_role
+        new_files = create_new_files role_hash.delete('ansible_files')
+        role = AnsibleRole.new(role_hash)
+        role.ansible_files = new_files
+        role.save
       end
     end
 
-    def delete_old_roles(changes)
-      changes['obsolete'].values.each do |old_role|
+    def create_new_files(files_attrs)
+      files_attrs.map { |attrs| AnsibleFile.create attrs }
+    end
+
+    def delete_old_roles(changes_old)
+      changes_old.values.each do |old_role|
         AnsibleRole.find(JSON.parse(old_role)['id']).destroy
       end
     end
@@ -29,7 +37,7 @@ module ForemanAnsible
       role_names.map do |role_name, folders|
         role = AnsibleRole.find_or_initialize_by(:name => role_name)
         role.ansible_files = process_files role, folders
-        role.proxy_id = ansible_proxy.id
+        role.ansible_proxy = ansible_proxy
         role
       end
     end
@@ -48,9 +56,5 @@ module ForemanAnsible
       changes[:obsolete] = AnsibleRole.where.not(:id => old.map(&:id))
       changes
     end
-
-    private
-
-
   end
 end

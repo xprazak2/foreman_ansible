@@ -28,5 +28,11 @@ module ProxyAPI
     rescue => e
       raise ProxyException.new(url, e, N_('Unable to delete file'))
     end
+
+    def create_file(role_name, dir, file_name, content)
+      parse(put content, "/file/#{role_name}/#{dir}/#{file_name}")
+    rescue => e
+      raise ProxyException.new(url, e, N_('Unable to delete file'))
+    end
   end
 end

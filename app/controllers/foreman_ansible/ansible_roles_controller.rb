@@ -5,7 +5,6 @@ module ForemanAnsible
     before_action :find_role, :only => [:destroy]
     before_action :find_proxy, :only => [:import]
     before_action :create_importer, :only => [:import, :confirm_import]
-    before_action :create_importer, :only => [:import]
 
     def index
       @roles = resource_base.search_for(params[:search], :order => params[:order])
