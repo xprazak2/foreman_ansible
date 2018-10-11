@@ -9,7 +9,6 @@ const clickHandler = (onClick, role) => (event) => {
   onClick(role);
 };
 
-
 const actionButton = (icon, onClick, role) => (
   <button
     href='#'

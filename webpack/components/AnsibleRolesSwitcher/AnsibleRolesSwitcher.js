@@ -50,32 +50,32 @@ class AnsibleRolesSwitcher extends React.Component {
 
     return (
       <Grid bsClass="container-fluid" id="ansibleRolesSwitcher">
-          <Row className="row-eq-height">
-            { showError(error) }
-            <Col sm={6} className="available-roles-container">
-              <div className="available-roles-header">
-                <h2>{__('Available Ansible Roles')}</h2>
-              </div>
-               <AvailableRolesList unassignedRoles={unassignedRoles}
-                                   pagination={pagination}
-                                   itemCount={itemCount}
-                                   onListingChange={onListingChange}
-                                   onAddRole={addAnsibleRole}
-                                   loading={loading} />
-            </Col>
+        <Row className="row-eq-height">
+          { showError(error) }
+          <Col sm={6} className="available-roles-container">
+            <div className="available-roles-header">
+              <h2>{__('Available Ansible Roles')}</h2>
+            </div>
+             <AvailableRolesList unassignedRoles={unassignedRoles}
+                                 pagination={pagination}
+                                 itemCount={itemCount}
+                                 onListingChange={onListingChange}
+                                 onAddRole={addAnsibleRole}
+                                 loading={loading} />
+          </Col>
 
-            <Col sm={6} className="assigned-roles-container">
-              <div className="assigned-roles-header">
-                <h2>{__('Assigned Ansible Roles')}</h2>
-              </div>
-                 <AssignedRolesList assignedRoles={assignedRoles}
-                                    pagination={assignedPagination}
-                                    itemCount={assignedRolesCount}
-                                    onPaginationChange={changeAssignedPage}
-                                    onRemoveRole={removeAnsibleRole}
-                                    resourceName={resourceName} />
-            </Col>
-          </Row>
+          <Col sm={6} className="assigned-roles-container">
+            <div className="assigned-roles-header">
+              <h2>{__('Assigned Ansible Roles')}</h2>
+            </div>
+               <AssignedRolesList assignedRoles={assignedRoles}
+                                  pagination={assignedPagination}
+                                  itemCount={assignedRolesCount}
+                                  onPaginationChange={changeAssignedPage}
+                                  onRemoveRole={removeAnsibleRole}
+                                  resourceName={resourceName} />
+          </Col>
+        </Row>
       </Grid>
     );
   }
