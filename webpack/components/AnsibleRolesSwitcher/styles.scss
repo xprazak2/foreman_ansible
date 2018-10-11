@@ -1,0 +1,21 @@
+@import '~patternfly/dist/sass/patternfly/_color-variables';
+
+
+div.list-view-pf {
+  .list-group-item.ansible-role-disabled {
+    background-color: $color-pf-black-200;
+    color: $color-pf-black-500;
+    border-left-color: $color-pf-black-200;
+    border-right-color: $color-pf-black-200;
+
+    &:hover {
+      background-color: inherit;
+    }
+  }
+}
+
+div.available-roles-container {
+  .list-view-pf-view {
+    background-color: inherit;
+  }
+}
