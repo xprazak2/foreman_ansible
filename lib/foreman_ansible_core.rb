@@ -12,6 +12,7 @@ module ForemanAnsibleCore
   extend ForemanTasksCore::SettingsLoader
   register_settings(:ansible, :ansible_dir => Dir.home,
                               :working_dir => nil)
+  initialize_settings
 
   if ForemanTasksCore.dynflow_present?
     require 'foreman_tasks_core/runner'

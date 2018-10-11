@@ -15,7 +15,7 @@ import {
 
 export const getAnsibleRoles = (
   url,
-  initialAssignedRoles,
+  initialAssignedRoleIds,
   inheritedRoleIds,
   resourceId,
   resourceName,
