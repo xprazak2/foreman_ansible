@@ -15,7 +15,7 @@ const mapStateToProps = ({ foreman_ansible: { ansibleRolesSwitcher } }, ownProps
           loading,
           assignedPagination = {} } = ansibleRolesSwitcher;
 
-  const { data: { assignedRoleIds, inheritedRoleIds, resourceName = '' } } = ownProps;
+  const { data: { resourceName = '' } } = ownProps;
 
   return ({ results: results,
             pagination: pagination,
@@ -36,12 +36,12 @@ const assignedRolesPage = (assignedRoles, assignedPagination) => {
 
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { data: { availableRolesUrl, assignedRoleIds, inheritedRoleIds, resourceId, resourceName } } = ownProps;
-
+  const { data: { availableRolesUrl, initialAssignedRoles, inheritedRoleIds, resourceId, resourceName } } = ownProps;
+  console.log(initialAssignedRoles)
   return {
     getAnsibleRoles: bindActionCreators(
       AnsibleRolesSwitcherActions.getAnsibleRoles, dispatch
-    )(availableRolesUrl, assignedRoleIds, inheritedRoleIds, resourceId, resourceName),
+    )(availableRolesUrl, initialAssignedRoles, inheritedRoleIds, resourceId, resourceName),
     addAnsibleRole: bindActionCreators(AnsibleRolesSwitcherActions.addAnsibleRole, dispatch),
     removeAnsibleRole: bindActionCreators(AnsibleRolesSwitcherActions.removeAnsibleRole, dispatch),
     changeAssignedPage: bindActionCreators(AnsibleRolesSwitcherActions.changeAssignedPage, dispatch)

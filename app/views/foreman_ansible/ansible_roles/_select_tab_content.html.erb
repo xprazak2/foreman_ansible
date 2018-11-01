@@ -3,9 +3,9 @@
 
 <div class='tab-pane' id='ansible_roles'>
   <div id='ansible_roles_switcher'></div>
-  <% roles = f.object.is_a?(Hostgroup) ? (f.object.inherited_and_own_ansible_roles).map(&:id) : f.object.all_ansible_roles.map(&:id) %>
+  <% roles = f.object.is_a?(Hostgroup) ? roles_attrs(f.object.inherited_and_own_ansible_roles) : roles_attrs(f.object.all_ansible_roles) %>
   <% class_name = f.object.is_a?(Hostgroup) ? 'Hostgroup' : 'Host' %>
-  <%= mount_react_component('AnsibleRolesSwitcher', '#ansible_roles_switcher', { :assignedRoleIds => roles,
+  <%= mount_react_component('AnsibleRolesSwitcher', '#ansible_roles_switcher', { :initialAssignedRoles => roles,
                                                                                  :inheritedRoleIds => f.object.inherited_ansible_roles.map(&:id),
                                                                                  :availableRolesUrl => ui_ansible_roles_path,
                                                                                  :resourceId => f.object.id,

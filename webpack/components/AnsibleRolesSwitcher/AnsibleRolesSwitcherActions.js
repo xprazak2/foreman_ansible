@@ -11,7 +11,7 @@ import {
 
 import api from 'foremanReact/API';
 
-export const getAnsibleRoles = (url, assignedRoleIds, inheritedRoleIds, resourceId, resourceName) => dispatch => {
+export const getAnsibleRoles = (url, initialAssignedRoles, inheritedRoleIds, resourceId, resourceName) => dispatch => {
   return pagination => {
     dispatch({ type: ANSIBLE_ROLES_REQUEST });
 
@@ -19,7 +19,7 @@ export const getAnsibleRoles = (url, assignedRoleIds, inheritedRoleIds, resource
 
     return api.get(url, {}, params)
               .then(({ data }) => dispatch({ type: ANSIBLE_ROLES_SUCCESS,
-                                             payload: Object.assign(data, { assignedRoleIds, inheritedRoleIds }) } ))
+                                             payload: Object.assign(data, { initialAssignedRoles, inheritedRoleIds }) } ))
               .catch(error => dispatch({ type: ANSIBLE_ROLES_FAILURE,
                                          payload: { error } }));
   }
