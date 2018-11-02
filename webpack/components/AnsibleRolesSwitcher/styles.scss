@@ -1,21 +1,56 @@
 @import '~patternfly/dist/sass/patternfly/_color-variables';
 
+#ansibleRolesSwitcher {
 
-div.list-view-pf {
-  .list-group-item.ansible-role-disabled {
-    background-color: $color-pf-black-200;
-    color: $color-pf-black-500;
-    border-left-color: $color-pf-black-200;
-    border-right-color: $color-pf-black-200;
+  .list-view-pf {
+    .list-group-item.ansible-role-disabled {
+      background-color: $color-pf-black-200;
+      color: $color-pf-black-500;
+      border-left-color: $color-pf-black-200;
+      border-right-color: $color-pf-black-200;
 
-    &:hover {
+/*      &:hover {
+        background-color: inherit;
+   }
+*/    }
+
+    /*background-color: inherit;*/
+  }
+
+/*  .row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+*/
+/*  .content-view-pf-pagination {
+    background-color: $color-pf-white;
+  }
+*/
+  .sticky-pagination {
+    position: sticky;
+    top: 60px;
+    z-index: 2;
+    /*background-color: white;*/
+    /*padding-top: 10px;*/
+  }
+
+
+  /*.available-roles-container {
+    .list-view-pf-view {
       background-color: inherit;
     }
   }
-}
-
-div.available-roles-container {
-  .list-view-pf-view {
-    background-color: inherit;
+*/
+/*  .assigned-roles-container {
+    background-color: $color-pf-black-200;
   }
+*/
+  .role-add-remove-btn {
+    background-color: initial;
+    border: none;
+    color: #0388ce;
+  }
+
 }

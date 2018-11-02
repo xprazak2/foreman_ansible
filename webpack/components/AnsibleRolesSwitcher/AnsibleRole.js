@@ -1,32 +1,28 @@
 import React from 'react';
 
-import { ListView, Icon } from 'patternfly-react';
+import { ListView } from 'patternfly-react';
 import cx from 'classnames';
 
-import './styles.scss'
+import './styles.scss';
 
-const clickHandler = (onClick, role) => event => {
+const clickHandler = (onClick, role) => (event) => {
   event.preventDefault();
   onClick(role);
-}
+};
 
 
 const actionButton = (icon, onClick, role) => (
   <button
     href='#'
     onClick={clickHandler(onClick, role)}
-    style={{
-        backgroundColor: 'initial',
-        border: 'none',
-        color: '#0388ce',
-      }}
+    className="role-add-remove-btn"
   >
     <i className={cx('fa-2x', icon)} />
   </button>
-)
+);
 
 const AnsibleRole = ({ role, icon, onClick }) => {
-  const disabledClass = role.inherited ? "ansible-role-disabled" : '';
+  const disabledClass = role.inherited ? 'ansible-role-disabled' : '';
   return (
     <ListView.Item
       id={role.id}
@@ -37,6 +33,6 @@ const AnsibleRole = ({ role, icon, onClick }) => {
     >
     </ListView.Item>
   );
-}
+};
 
 export default AnsibleRole;

@@ -1,22 +1,15 @@
 import React from 'react';
 
 import { ListView } from 'patternfly-react';
-import { Spinner } from 'patternfly-react';
-
-import { LoadingState } from '../LoadingState'
-
-import { sprintf } from 'jed';
-
-
 import { reject } from 'lodash';
 
+import { LoadingState } from '../LoadingState';
 import PaginationRow from '../PaginationRow';
 import AnsibleRole from './AnsibleRole';
 
 
-export const listAvailableRoles = (unassignedRoles, pagination, itemCount, onPaginationChange, onAddRole, loading) => {
-
-  return (
+export const listAvailableRoles = (unassignedRoles, pagination, itemCount, onPaginationChange, onAddRole, loading) =>
+  (
     <ListView>
       <div className="sticky-pagination">
         <PaginationRow
@@ -32,10 +25,9 @@ export const listAvailableRoles = (unassignedRoles, pagination, itemCount, onPag
       </LoadingState>
     </ListView>
   );
-};
 
 export const listAssignedRoles = (assignedRoles, pagination, itemCount, onPaginationChange, onRemoveRole, resourceName) => {
-  const directlyAssignedRoles = reject(assignedRoles, (role) => role.inherited)
+  const directlyAssignedRoles = reject(assignedRoles, role => role.inherited);
 
   return (
     <div>
@@ -55,5 +47,5 @@ export const listAssignedRoles = (assignedRoles, pagination, itemCount, onPagina
         { directlyAssignedRoles.map(role => <input key={role.id} type="hidden" name={`${resourceName}[ansible_role_ids][]`} value={role.id} />) }
       </div>
     </div>
-  )
+  );
 };

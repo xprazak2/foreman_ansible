@@ -1,8 +1,12 @@
 {
   "root": true,
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base",
+    "plugin:you-dont-need-lodash-underscore/all"
+  ],
   "plugins": [
-    "react"
+    "react",
+    "you-dont-need-lodash-underscore"
   ],
   "env": {
     "browser": true,

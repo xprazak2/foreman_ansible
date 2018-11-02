@@ -1,4 +1,5 @@
 import { reduce, snakeCase } from 'lodash';
+import api from 'foremanReact/API';
 
 import {
   ANSIBLE_ROLES_REQUEST,
@@ -9,33 +10,28 @@ import {
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
 } from './AnsibleRolesSwitcherConstants';
 
-import api from 'foremanReact/API';
-
 export const getAnsibleRoles = (url, initialAssignedRoles, inheritedRoleIds, resourceId, resourceName) => dispatch => {
-  return pagination => {
+  return (pagination) => {
     dispatch({ type: ANSIBLE_ROLES_REQUEST });
 
-    const params = Object.assign({}, propsToSnakeCase(pagination || {}), propsToSnakeCase({ resourceId, resourceName }))
+    const params = { ...propsToSnakeCase(pagination || {}), ...propsToSnakeCase({ resourceId, resourceName }) };
 
     return api.get(url, {}, params)
               .then(({ data }) => dispatch({ type: ANSIBLE_ROLES_SUCCESS,
-                                             payload: Object.assign(data, { initialAssignedRoles, inheritedRoleIds }) } ))
+                                             payload: { initialAssignedRoles, inheritedRoleIds, ...data } }))
               .catch(error => dispatch({ type: ANSIBLE_ROLES_FAILURE,
                                          payload: { error } }));
-  }
-}
+  };
+};
 
-export const addAnsibleRole = role => dispatch => {
-  return dispatch({ type: ANSIBLE_ROLES_ADD, payload: { role } });
-}
+export const addAnsibleRole = role => dispatch =>
+  dispatch({ type: ANSIBLE_ROLES_ADD, payload: { role } });
 
-export const removeAnsibleRole = role => dispatch => {
-  return dispatch({ type: ANSIBLE_ROLES_REMOVE, payload: { role } });
-}
+export const removeAnsibleRole = role => dispatch =>
+  dispatch({ type: ANSIBLE_ROLES_REMOVE, payload: { role } });
 
-export const changeAssignedPage = pagination => dispatch => {
-  return dispatch({ type: ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE, payload: { pagination } })
-}
+export const changeAssignedPage = pagination => dispatch =>
+  dispatch({ type: ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE, payload: { pagination } });
 
 //  stolen from katello/webpack/services/index.js and modified
 const propsToSnakeCase = (ob) => {
