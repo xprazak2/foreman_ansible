@@ -6,13 +6,12 @@ import { isEqual } from 'lodash';
 
 const defaultPerPageOptions = [5, 10, 15, 20, 25, 50];
 
-const initPagination = (props) => {
-  const pagination = props.pagination || {};
-  // The default pagination is normally returned from server.
-  // This values are used only when there's some error in the server response.
+const initPagination = (paginationFromProps) => {
+  const pagination = paginationFromProps || {};
+
   const defaultPagination = {
     page: 1,
-    perPage: 10,
+    perPage: 20,
     perPageOptions: defaultPerPageOptions,
   };
   return { ...defaultPagination, ...pagination };
@@ -22,17 +21,8 @@ class PaginationRow extends Component {
   constructor(props) {
     super(props);
 
-    this.state = initPagination(this.props);
-
     this.onPageSet = this.onPageSet.bind(this);
     this.onPerPageSelect = this.onPerPageSelect.bind(this);
-  }
-
-  static getDerivedStateFromProps(newProps, prevState) {
-    if (!isEqual(newProps.pagination, prevState.pagination)) {
-      return { ...newProps.pagination };
-    }
-    return null;
   }
 
   onPageSet(page) {
@@ -46,12 +36,11 @@ class PaginationRow extends Component {
   }
 
   update(changes) {
-    const newState = { ...this.state, ...changes };
-    this.setState(newState);
+    const newPagination = { ...this.props.pagination, ...changes };
 
     this.props.onChange({
-      page: newState.page,
-      perPage: newState.perPage,
+      page: newPagination.page,
+      perPage: newPagination.perPage,
     });
   }
 
@@ -63,7 +52,7 @@ class PaginationRow extends Component {
     return (
       <Paginator
         {...otherProps}
-        pagination={this.state}
+        pagination={initPagination(pagination)}
         onPageSet={this.onPageSet}
         onPerPageSelect={this.onPerPageSelect}
         dropdownButtonId={this.props.dropdownButtonId}
