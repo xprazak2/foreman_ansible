@@ -2,11 +2,10 @@ import React from 'react';
 
 import { ListView } from 'patternfly-react';
 import { reject } from 'lodash';
+import PaginationRow from 'foremanReact/components/common/PaginationRow';
 
 import { LoadingState } from '../LoadingState';
-import PaginationRow from '../PaginationRow';
 import AnsibleRole from './AnsibleRole';
-
 
 export const listAvailableRoles = (unassignedRoles, pagination, itemCount, onPaginationChange, onAddRole, loading) =>
   (
