@@ -2,7 +2,8 @@ import React from 'react';
 
 import { ListView } from 'patternfly-react';
 import { reject } from 'lodash';
-import PaginationRow from 'foremanReact/components/common/PaginationRow';
+import Pagination from 'foremanReact/components/Pagination/Pagination';
+import PaginationWrapper from 'foremanReact/components/Pagination/PaginationWrapper';
 
 import { LoadingState } from '../LoadingState';
 import AnsibleRole from './AnsibleRole';
@@ -11,7 +12,7 @@ export const listAvailableRoles = (unassignedRoles, pagination, itemCount, onPag
   (
     <ListView>
       <div className="sticky-pagination">
-        <PaginationRow
+        <PaginationWrapper
           viewType="list"
           itemCount={itemCount}
           pagination={pagination}
@@ -32,7 +33,7 @@ export const listAssignedRoles = (assignedRoles, pagination, itemCount, onPagina
     <div>
       <ListView>
         <div className="sticky-pagination sticky-pagination-grey">
-          <PaginationRow
+          <PaginationWrapper
             viewType="list"
             itemCount={itemCount}
             pagination={pagination}
