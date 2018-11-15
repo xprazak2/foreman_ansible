@@ -14,7 +14,7 @@ const mapStateToProps = ({ foreman_ansible: { ansibleRolesSwitcher } }, ownProps
     assignedRoles,
     loading,
     assignedPagination
-  } = ansibleRolesSwitcher;
+  } = ansibleRolesSwitcher.switcher;
 
   const { data: { resourceName = '' } } = ownProps;
 
@@ -26,8 +26,9 @@ const mapStateToProps = ({ foreman_ansible: { ansibleRolesSwitcher } }, ownProps
     assignedPagination: assignedPagination,
     assignedRolesCount: assignedRoles.length,
     resourceName: lowerCase(resourceName),
-    assignedRoles: assignedRolesPage(ansibleRolesSwitcher.assignedRoles, ansibleRolesSwitcher.assignedPagination),
-    unassignedRoles: calculateUnassignedRoles(ansibleRolesSwitcher),
+    assignedRoles: assignedRolesPage(assignedRoles, assignedPagination),
+    unassignedRoles: calculateUnassignedRoles(results, assignedRoles),
+    assignedFilterString: ansibleRolesSwitcher.connectedSearch.filterString
   });
 };
 

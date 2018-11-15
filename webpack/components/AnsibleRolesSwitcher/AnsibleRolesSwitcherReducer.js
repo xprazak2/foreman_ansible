@@ -1,5 +1,7 @@
 import { includes } from 'lodash';
 import Immutable from 'seamless-immutable';
+import { combineReducers } from 'redux';
+import connectedSearch from './ConnectedSearch/ConnectedSearchReducer.js'
 
 import {
   ANSIBLE_ROLES_REQUEST,
@@ -81,4 +83,4 @@ const ansibleRoles = (state = initialState, action) => {
   }
 };
 
-export default ansibleRoles;
+export default combineReducers({ switcher: ansibleRoles, connectedSearch });

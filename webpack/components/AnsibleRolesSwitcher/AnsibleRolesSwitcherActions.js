@@ -11,10 +11,10 @@ import {
 } from './AnsibleRolesSwitcherConstants';
 
 export const getAnsibleRoles = (url, initialAssignedRoles, inheritedRoleIds, resourceId, resourceName) => dispatch => {
-  return (pagination) => {
+  return (requestParams) => {
     dispatch({ type: ANSIBLE_ROLES_REQUEST });
 
-    const params = { ...propsToSnakeCase(pagination || {}), ...propsToSnakeCase({ resourceId, resourceName }) };
+    const params = { ...propsToSnakeCase(requestParams || {}), ...propsToSnakeCase({ resourceId, resourceName }) };
 
     return api.get(url, {}, params)
               .then(({ data }) => dispatch({ type: ANSIBLE_ROLES_SUCCESS,

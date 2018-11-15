@@ -37,12 +37,16 @@
   }
 
 
-  /*.available-roles-container {
-    .list-view-pf-view {
+  .available-roles-container {
+/*    .list-view-pf-view {
       background-color: inherit;
+    }*/
+    .input-search {
+      margin-top: 30px;
+      left: 0;
     }
   }
-*/
+
 /*  .assigned-roles-container {
     background-color: $color-pf-black-200;
   }
