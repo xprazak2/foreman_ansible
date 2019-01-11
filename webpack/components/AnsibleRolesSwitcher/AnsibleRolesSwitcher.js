@@ -7,7 +7,7 @@ import AvailableRolesList from './AvailableRolesList';
 import AssignedRolesList from './AssignedRolesList';
 
 const excludeAssignedRolesSearch = assignedRoles =>
-  ({ search: `id !^ (${assignedRoles.map(role => role.id).join(', ')})` });
+  isEmpty(assignedRoles) ? ({}) : ({ search: `id !^ (${assignedRoles.map(role => role.id).join(', ')})` });
 
 class AnsibleRolesSwitcher extends React.Component {
   componentDidMount() {
