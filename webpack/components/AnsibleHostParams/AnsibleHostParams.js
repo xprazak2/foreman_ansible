@@ -17,8 +17,6 @@ export default (props) => {
   // const omitHelpButton = <Button className="popover-pf-info btn btn-link" type="button"><Icon type="pf" name="info" /></Button>
   const omitHelpButton = <a href='#'><Icon type="pf" name="info" /></a>
 
-  const assignedRoles = props.assignedRoles || [];
-
   return (<div>
             <fieldset>
               <h2> { __('Ansible  Variables') }</h2>
@@ -40,7 +38,7 @@ export default (props) => {
                   </tr>
                 </thead>
                   <tbody>
-                    { tableBody(assignedRoles) }
+                    <VariableTableRows assignedRoles={props.assignedRoles} />
                   </tbody>
               </table>
             </Spinner>
@@ -50,10 +48,11 @@ export default (props) => {
   );
 };
 
-const tableBody = (assignedRoles) => {
+
+const VariableTableRows = ({ assignedRoles }) => {
   const markup = assignedRoles.map((role) => {
 
-    const overrideKeys = filter(role.lookup_keys, lookupKey => lookupKey.override);
+    const overrideKeys = filter(role.ansible_variables, ansibleVar => ansibleVar.override);
 
     const firstKey = overrideKeys[0] || {};
 

@@ -4,7 +4,7 @@ import { isEmpty, find } from 'lodash';
 
 import AnsibleVariableInput from './AnsibleVariableInput';
 
-class AnsbileParamsTableRow extends React.Component {
+class AnsibleParamsTableRow extends React.Component {
   constructor(props) {
     super(props);
 
@@ -12,13 +12,9 @@ class AnsbileParamsTableRow extends React.Component {
       const findOverride = (lookupKey) => find(lookupKey.override_values, (value) =>
         (value.value === lookupKey.current_override.value &&
          value.match === `${lookupKey.current_override.element}=${lookupKey.current_override.element_name}`));
-
-      console.log(findOverride(lookupKey))
-
-      // const override = (({ id, match, omit, value }) => ({ id, match, omit, value }))(findOverride(lookupKey));
       const override = findOverride(lookupKey);
 
-      if (lookupKey.override_values.element !== 'fqdn') {
+      if (lookupKey.current_override.element !== 'fqdn') {
         override.id = '';
       }
 
@@ -95,4 +91,8 @@ class AnsbileParamsTableRow extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 export default AnsbileParamsTableRow;
+=======
+export default AnsibleParamsTableRow;
+>>>>>>> origin/ansible-host-params
