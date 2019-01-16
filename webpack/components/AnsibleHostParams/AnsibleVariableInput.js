@@ -14,7 +14,10 @@ const keyOverlay = (lookupKey, lookupValue) => (
 );
 
 const formatMatcher = (currentOverride) =>
-  (currentOverride.element + ' (' + currentOverride.element_name +')')
+  currentOverride ?
+  (currentOverride.element + ' (' + currentOverride.element_name +')') :
+  ''
+
 
 const keyInfoPopover = (lookupKey, lookupValue) => (
   <div style={{ textAlign: 'center' }}>
@@ -53,9 +56,6 @@ const buttonHelpOverlay = (popoverText, popoverId) => (
 );
 
 export default (props) => {
-  console.log('variable input props')
-  console.log(props)
-
   const lookupKey = props.lookupKey;
 
   const { fieldDisabled, toggleOverride, fieldOverriden, lookupValue, updateLookupValue } = props;
@@ -70,7 +70,7 @@ export default (props) => {
                 value={ showLookupValue(lookupKey, lookupValue) }
                 name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
                 onChange={(e) => updateLookupValue(e.target.value)}
-                disabled={fieldDisabled()}/>
+                disabled={fieldDisabled}/>
       <span className="input-group-btn">
         { fullscreenButton() }
         { overrideButton(toggleOverride, fieldOverriden, lookupKey.id) }
@@ -82,7 +82,7 @@ export default (props) => {
 const overrideButton = (toggleField, fieldOverriden, keyId) => {
   let faIcon, popoverText, popoverId;
 
-  if (fieldOverriden) {
+  if (!fieldOverriden) {
     faIcon = 'fa-pencil-square-o';
     popoverText = __('Override this value');
     popoverId = `lookup-key-add-override-${keyId}`
@@ -115,7 +115,7 @@ const lookupKeyWarnings = (required, hasValue) => {
             icon: "warning-triangle-o" });
 }
 
-const showLookupValue = (lookupKey, lookupValue) => lookupKey['hidden_value?'] ? lookupKey.hidden_value : lookupValue.value;
+const showLookupValue = (lookupKey, lookupValue) => lookupKey['hidden_value?'] ? lookupKey.hidden_value : (lookupValue && lookupValue.value);
 
 const rawLookupValue = (lookupKey) => lookupKey.override && lookupKey.current_override ? lookupKey.current_override.value : lookupKey.default_value;
 

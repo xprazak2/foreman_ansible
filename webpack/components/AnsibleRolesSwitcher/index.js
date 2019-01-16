@@ -17,7 +17,7 @@ const mapStateToProps = ({ foreman_ansible: { ansibleRolesSwitcher } }, ownProps
     error,
   } = ansibleRolesSwitcher;
 
-  const { data: { resourceName = '', initialAssignedRoles } } = ownProps;
+  const { data: { resourceName = '', initialAssignedRoleIds } } = ownProps;
 
   return ({
     results,
@@ -25,7 +25,7 @@ const mapStateToProps = ({ foreman_ansible: { ansibleRolesSwitcher } }, ownProps
     itemCount,
     loading,
     error,
-    initialAssignedRoles,
+    initialAssignedRoleIds,
     assignedPagination,
     assignedRolesCount: assignedRoles.length,
     resourceName: lowerCase(resourceName),
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const {
     data: {
       availableRolesUrl,
-      initialAssignedRoles,
+      initialAssignedRoleIds,
       inheritedRoleIds,
       resourceId,
       resourceName,
@@ -54,7 +54,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch,
     )(
       availableRolesUrl,
-      initialAssignedRoles,
+      initialAssignedRoleIds,
       inheritedRoleIds,
       resourceId,
       resourceName,

@@ -1,4 +1,4 @@
-import { includes } from 'lodash';
+import { includes, uniq } from 'lodash';
 import Immutable from 'seamless-immutable';
 
 import {
@@ -16,24 +16,25 @@ const ansibleRolesSuccess = (state, payload) => {
     perPage,
     subtotal,
     results,
-    initialAssignedRoles,
+    initialAssignedRoleIds,
     inheritedRoleIds,
   } = payload;
 
-  return initAssignedRoles(state, initialAssignedRoles, inheritedRoleIds)
+  return initAssignedRoles(state, results, initialAssignedRoleIds, inheritedRoleIds)
     .set('loading', false)
     .set('itemCount', Number(subtotal))
     .set('pagination', { page: Number(page), perPage: Number(perPage) })
     .set('results', results);
 };
 
-const initAssignedRoles = (state, initialAssignedRoles, inheritedRoleIds) => {
+const initAssignedRoles = (state, results, initialAssignedRoleIds, inheritedRoleIds) => {
   if (!state.initialized) {
-    const assignedRoles = initialAssignedRoles.map(role => (
+    const assignedIds = uniq([ ...initialAssignedRoleIds, ...inheritedRoleIds])
+    const assignedRoles = results.map(role => (
       includes(inheritedRoleIds, role.id) ?
         { ...role, inherited: true } :
         role
-    ));
+    )).filter(role => includes(assignedIds, role.id));
 
     return state.set('assignedRoles', assignedRoles).set('initialized', true);
   }

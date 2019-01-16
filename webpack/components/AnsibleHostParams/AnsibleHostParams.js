@@ -61,7 +61,7 @@ const VariableTableRows = ({ assignedRoles }) => {
     return overrideKeys.map((lookupKey) => {
 
       return (
-        <AnsibleParamsTableRow key={lookupKey.id} role={role} lookupKey={lookupKey} firstKey={firstKey}/>
+        <AnsibleParamsTableRow key={lookupKey.id} role={role} lookupKey={lookupKey} firstKey={firstKey} />
       )
     });
   });

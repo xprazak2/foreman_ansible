@@ -11,7 +11,7 @@ const excludeAssignedRolesSearch = assignedRoles =>
 
 class AnsibleRolesSwitcher extends React.Component {
   componentDidMount() {
-    this.props.getAnsibleRoles({}, excludeAssignedRolesSearch(this.props.initialAssignedRoles));
+    this.props.getAnsibleRoles();
   }
 
   render() {
