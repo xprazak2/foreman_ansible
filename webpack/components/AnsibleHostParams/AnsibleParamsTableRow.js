@@ -4,43 +4,56 @@ import { isEmpty, find } from 'lodash';
 
 import AnsibleVariableInput from './AnsibleVariableInput';
 
+const updateFieldDisabled = (overriden, ommited) => !overriden || ommited
+
 class AnsibleParamsTableRow extends React.Component {
   constructor(props) {
     super(props);
 
-    const initOverrideState = (lookupKey) => {
-      const findOverride = (lookupKey) => find(lookupKey.override_values, (value) =>
-        (value.value === lookupKey.current_override.value &&
-         value.match === `${lookupKey.current_override.element}=${lookupKey.current_override.element_name}`));
-      const override = findOverride(lookupKey);
-
-      if (lookupKey.current_override.element !== 'fqdn') {
-        override.id = '';
+    const initLookupValue = (lookupKey) => {
+      console.log('current_override')
+      console.log(lookupKey.current_override)
+      console.log(lookupKey.override_values)
+      if (!lookupKey.current_override) {
+        return ({ element: 'fqdn', value: lookupKey.default_value, omit: false });
       }
 
-      return override;
+      if (lookupKey.current_override.element === 'fqdn') {
+        const found = find(lookupKey.override_values, (value) => (
+          // value.value === lookupKey.current_override.value &&
+          value.match === `fqdn=${lookupKey.current_override.element_name}`)
+        );
+
+        return ({ ...lookupKey.current_override, id: found.id, element: 'fqdn', omit: found.omit });
+      }
+
+      return lookupKey.current_override;
     }
 
+    const { lookupKey } = props;
+    const lookupValue = initLookupValue(lookupKey)
+    const fieldOverriden = lookupValue.element === 'fqdn';
+    const fieldOmmited = !!lookupKey.omit || lookupValue.omit;
+
     this.state = {
-      fieldOverriden: true,
-      lookupValue: initOverrideState(props.lookupKey)
+      fieldOverriden: fieldOverriden,
+      fieldOmmited: fieldOmmited,
+      lookupValue: lookupValue,
+      fieldDisabled: updateFieldDisabled(fieldOverriden, fieldOmmited)
     };
 
     this.toggleOverride = this.toggleOverride.bind(this);
     this.toggleOmit = this.toggleOmit.bind(this);
-    this.fieldDisabled = this.fieldDisabled.bind(this);
   }
 
   toggleOverride(){
-    this.setState({ fieldOverriden: !this.state.fieldOverriden });
+    this.setState({ fieldOverriden: !this.state.fieldOverriden,
+                    fieldDisabled: updateFieldDisabled(!this.state.fieldOverriden, this.state.fieldOmmited) });
   }
 
   toggleOmit() {
-    this.setState({ lookupValue: Object.assign({}, this.state.lookupValue, { omit: !this.state.lookupValue.omit }) });
-  }
-
-  fieldDisabled() {
-    return this.state.fieldOverriden || this.state.fieldOmit;
+    this.setState({ fieldOmmited: !this.state.fieldOmmited,
+                    fieldDisabled: updateFieldDisabled(this.state.fieldOverriden, !this.state.fieldOmmited) });
   }
 
   updateLookupAttr = (attr) => (value) => {
@@ -50,26 +63,17 @@ class AnsibleParamsTableRow extends React.Component {
   render() {
     const { role, lookupKey, firstKey } = this.props;
 
-    const overridenClass = (lookupKey) => lookupKey.override ? 'overriden' : '';
-
     const roleNameColumn = role => {
-      return (<td className="elipsis" rowSpan={role.lookup_keys.length}>{ role.name }</td>);
+      return (<td className="elipsis" rowSpan={role.ansible_variables.length}>{ role.name }</td>);
     }
 
     const constructId = (role, lookupKey) => `ansible_role_${role.id}_params[${lookupKey.id}]`;
 
     const overrideFieldName = (lookupKey, attr) => `host[lookup_values_attributes][${lookupKey.id}][${attr}]`;
 
-    const checkboxInput = <input type="checkbox"
-                                 onChange={this.updateLookupAttr('omit')}
-                                 defaultChecked={this.state.lookupValue.omit}
-                                 name={`host[lookup_values_attributes][${lookupKey.id}][omit]`}
-                                 style={{}}/>;
-
-
     return (
-      <tr id={constructId(role, lookupKey)} className={`fields ${overridenClass(lookupKey)}`} key={lookupKey.id}>
-        { lookupKey.id === firstKey.id ? roleNameColumn(role) : null }
+      <tr id={constructId(role, lookupKey)} className={`fields overriden`} key={lookupKey.id}>
+        { firstKey && lookupKey.id === firstKey.id ? roleNameColumn(role) : null }
         <td className="elipsis param_name">{ lookupKey.parameter }</td>
         <td className="elipsis">{ __('Ansible Variable') }</td>
         <td className={ false ? 'has-error' : '' }>
@@ -78,21 +82,38 @@ class AnsibleParamsTableRow extends React.Component {
                                 lookupValue={this.state.lookupValue}
                                 updateLookupValue={this.updateLookupAttr('value')}
                                 toggleOverride={this.toggleOverride}
-                                fieldDisabled={this.fieldDisabled}
-                                fieldOverriden={this.state.fieldOverriden}/>
+                                fieldDisabled={this.state.fieldDisabled}
+                                fieldOverriden={this.state.fieldOverriden}
+                                fieldOmmited={this.state.fieldOmmited}/>
         </td>
         <td className="ca">
-          { this.state.fieldOverriden ? '' : checkboxInput }
-          <input type="hidden" name={`host[lookup_values_attributes][${lookupKey.id}][lookup_key_id]`} value={lookupKey.id}/>
-          <input type="hidden" name={`host[lookup_values_attributes][${lookupKey.id}][id]`} value={this.state.lookupValue.id}/>
-          <input type="hidden" name={`host[lookup_values_attributes][${lookupKey.id}][_destroy]`} value={this.state.fieldOverriden}/>
+          <input type="checkbox"
+                 onChange={this.toggleOmit}
+                 checked={this.state.fieldOmmited}
+                 value={'1'}
+                 hidden={!this.state.fieldOverriden ? 'hidden' : undefined }
+                 name={`host[lookup_values_attributes][${lookupKey.id}][omit]`}
+                 style={{}}/>
+          <input type="hidden"
+                 value={'0'}
+                 disabled={this.state.fieldOmmited || !this.state.fieldOverriden}
+                 name={`host[lookup_values_attributes][${lookupKey.id}][omit]`}/>
+
+          <input type="hidden"
+                 name={`host[lookup_values_attributes][${lookupKey.id}][lookup_key_id]`}
+                 value={lookupKey.id}
+                 disabled={!this.state.fieldOverriden}/>
+          <input type="hidden"
+                 name={`host[lookup_values_attributes][${lookupKey.id}][id]`}
+                 value={this.state.lookupValue.id}
+                 disabled={!this.state.fieldOverriden}/>
+          <input type="hidden"
+                 name={`host[lookup_values_attributes][${lookupKey.id}][_destroy]`}
+                 value={false}
+                 disabled={!this.state.fieldOverriden}/>
         </td>
       </tr>)
   }
 }
 
-<<<<<<< HEAD
-export default AnsbileParamsTableRow;
-=======
 export default AnsibleParamsTableRow;
->>>>>>> origin/ansible-host-params

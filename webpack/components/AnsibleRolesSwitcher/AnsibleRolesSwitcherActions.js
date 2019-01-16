@@ -12,7 +12,7 @@ import {
 
 export const getAnsibleRoles = (
   url,
-  initialAssignedRoles,
+  initialAssignedRoleIds,
   inheritedRoleIds,
   resourceId,
   resourceName,
@@ -31,7 +31,7 @@ export const getAnsibleRoles = (
         .then(({ data }) => dispatch({
           type: ANSIBLE_ROLES_SUCCESS,
           payload: {
-            initialAssignedRoles,
+            initialAssignedRoleIds,
             inheritedRoleIds,
             ...propsToCamelCase(data),
           },
