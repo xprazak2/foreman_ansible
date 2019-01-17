@@ -1,5 +1,7 @@
 module ForemanAnsible
   class OverrideResolver
+    attr_reader :overrides
+
     def initialize(resource_id, resource_name, variables)
       @overrides = calculate_variable_overrides(resource_id, resource_name, variables)
     end
