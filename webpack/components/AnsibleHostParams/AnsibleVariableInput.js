@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Popover, OverlayTrigger, Button, Icon } from 'patternfly-react';
 
-const keyOverlay = (lookupKey, lookupValue) => (
+const keyOverlay = (lookupKey, lookupValue, hidden) => (
   <Popover id="popover" title='Original value info'>
     <div>
       <b>Description: </b> { lookupKey.description }<br/>
@@ -18,11 +18,10 @@ const formatMatcher = (currentOverride) =>
   (currentOverride.element + ' (' + currentOverride.element_name +')') :
   ''
 
-
-const keyInfoPopover = (lookupKey, lookupValue) => (
+const keyInfoPopover = (lookupKey, lookupValue, hidden) => (
   <div style={{ textAlign: 'center' }}>
     <OverlayTrigger
-      overlay={keyOverlay(lookupKey, lookupValue)}
+      overlay={keyOverlay(lookupKey, lookupValue, hidden)}
       placement='top'
       trigger='click'
       rootClose={true}
@@ -32,10 +31,7 @@ const keyInfoPopover = (lookupKey, lookupValue) => (
   </div>
 )
 
-
-
 const buttonHelpPopover = (button, popoverText, popoverId) => (
-  <div style={{ textAlign: 'center' }}>
     <OverlayTrigger
       overlay={buttonHelpOverlay(popoverText, popoverId)}
       placement='top'
@@ -44,7 +40,6 @@ const buttonHelpPopover = (button, popoverText, popoverId) => (
     >
       { button }
     </OverlayTrigger>
-  </div>
 );
 
 const buttonHelpOverlay = (popoverText, popoverId) => (
@@ -58,25 +53,61 @@ const buttonHelpOverlay = (popoverText, popoverId) => (
 export default (props) => {
   const lookupKey = props.lookupKey;
 
-  const { fieldDisabled, toggleOverride, fieldOverriden, lookupValue, updateLookupValue } = props;
+  const { fieldDisabled,
+          toggleOverride,
+          fieldOverriden,
+          lookupValue,
+          updateLookupValue,
+          toggleHidden,
+          fieldHidden } = props;
+
+  console.log(lookupValue)
 
   return (
     <div className='input-group'>
       <span className="input-group-addon">
-        { keyInfoPopover(lookupKey, lookupValue) }
+        { keyInfoPopover(lookupKey, lookupValue, fieldHidden) }
       </span>
-      <textarea className="form-control no-stretch"
+      <textarea className={`form-control no-stretch ${fieldHidden ? 'masked-input' : ''}`}
                 rows="1"
-                value={ showLookupValue(lookupKey, lookupValue) }
+                value={ lookupValue.value }
                 name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
                 onChange={(e) => updateLookupValue(e.target.value)}
                 disabled={fieldDisabled}/>
       <span className="input-group-btn">
+        { unhideButton(toggleHidden, fieldHidden, lookupKey) }
         { fullscreenButton() }
         { overrideButton(toggleOverride, fieldOverriden, lookupKey.id) }
       </span>
     </div>
   );
+}
+
+const unhideButton = (toggleHidden, hidden, lookupKey) => {
+  if (!lookupKey['hidden_value?']) {
+    return '';
+  }
+
+  let faIcon, popoverText, popoverId;
+
+  const keyId = lookupKey.id
+
+  if (hidden) {
+    popoverText = __('Unhide this value');
+    popoverId = `lookup-key-unhide-value-${keyId}`;
+  } else {
+    popoverText = __('Hide this value');
+    popoverId = `lookup-key-hide-value-${keyId}`;
+    faIcon = 'btn-strike';
+  }
+
+  const button = (
+    <Button name="button" type="button" className="btn btn-default btn-md btn-hide" onClick={toggleHidden}>
+      <span className={`fa fa-font ${faIcon}`}></span>
+    </Button>
+  )
+
+  return buttonHelpPopover(button, popoverText, popoverId);
 }
 
 const overrideButton = (toggleField, fieldOverriden, keyId) => {
@@ -115,9 +146,9 @@ const lookupKeyWarnings = (required, hasValue) => {
             icon: "warning-triangle-o" });
 }
 
-const showLookupValue = (lookupKey, lookupValue) => lookupKey['hidden_value?'] ? lookupKey.hidden_value : (lookupValue && lookupValue.value);
+const showLookupValue = (hidden, lookupValue) => hidden ? lookupValue.hidden_value : lookupValue.value;
 
-const rawLookupValue = (lookupKey) => lookupKey.override && lookupKey.current_override ? lookupKey.current_override.value : lookupKey.default_value;
+// const rawLookupValue = (lookupKey) => lookupKey.override && lookupKey.current_override ? lookupKey.current_override.value : lookupKey.default_value;
 
 // todo
 const fullscreenButton = () => {

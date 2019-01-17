@@ -24,7 +24,12 @@ class AnsibleParamsTableRow extends React.Component {
           value.match === `fqdn=${lookupKey.current_override.element_name}`)
         );
 
-        return ({ ...lookupKey.current_override, id: found.id, element: 'fqdn', omit: found.omit });
+        const override = ({ ...lookupKey.current_override, id: found.id, element: 'fqdn', omit: found.omit });
+
+        if (lookupKey['hidden_value?']) {
+          override.hidden_value = found.value
+        }
+        return override;
       }
 
       return lookupKey.current_override;
@@ -39,11 +44,13 @@ class AnsibleParamsTableRow extends React.Component {
       fieldOverriden: fieldOverriden,
       fieldOmmited: fieldOmmited,
       lookupValue: lookupValue,
-      fieldDisabled: updateFieldDisabled(fieldOverriden, fieldOmmited)
+      fieldDisabled: updateFieldDisabled(fieldOverriden, fieldOmmited),
+      fieldHidden: lookupKey['hidden_value?']
     };
 
     this.toggleOverride = this.toggleOverride.bind(this);
     this.toggleOmit = this.toggleOmit.bind(this);
+    this.toggleHidden = this.toggleHidden.bind(this);
   }
 
   toggleOverride(){
@@ -54,6 +61,10 @@ class AnsibleParamsTableRow extends React.Component {
   toggleOmit() {
     this.setState({ fieldOmmited: !this.state.fieldOmmited,
                     fieldDisabled: updateFieldDisabled(this.state.fieldOverriden, !this.state.fieldOmmited) });
+  }
+
+  toggleHidden() {
+    this.setState({ fieldHidden: !this.state.fieldHidden });
   }
 
   updateLookupAttr = (attr) => (value) => {
@@ -82,9 +93,11 @@ class AnsibleParamsTableRow extends React.Component {
                                 lookupValue={this.state.lookupValue}
                                 updateLookupValue={this.updateLookupAttr('value')}
                                 toggleOverride={this.toggleOverride}
+                                toggleHidden={this.toggleHidden}
                                 fieldDisabled={this.state.fieldDisabled}
                                 fieldOverriden={this.state.fieldOverriden}
-                                fieldOmmited={this.state.fieldOmmited}/>
+                                fieldOmmited={this.state.fieldOmmited}
+                                fieldHidden={this.state.fieldHidden}/>
         </td>
         <td className="ca">
           <input type="checkbox"
