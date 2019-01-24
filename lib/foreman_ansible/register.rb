@@ -89,5 +89,7 @@ Foreman::Plugin.register :foreman_ansible do
     register_report_scanner ForemanAnsible::AnsibleReportScanner
     register_report_origin 'Ansible', 'ConfigReport'
   end
+
+  register_info_provider ForemanAnsible::AnsibleInfoProvider
 end
 # rubocop:enable BlockLength
