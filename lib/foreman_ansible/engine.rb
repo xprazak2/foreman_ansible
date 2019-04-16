@@ -86,6 +86,8 @@ module ForemanAnsible
         end
         ::FactParser.register_fact_parser(:ansible, ForemanAnsible::FactParser)
         ::Host::Managed.send(:prepend, ForemanAnsible::HostManagedExtensions)
+        ::TemplateInput.send(:prepend, ForemanAnsible::TemplateInputExtensions)
+        ::JobTemplate.send(:prepend, ForemanAnsible::TemplateExtensions)
         ::Hostgroup.send(:include, ForemanAnsible::HostgroupExtensions)
         ::HostsHelper.send(:include, ForemanAnsible::HostsHelperExtensions)
         ::HostsController.send(
