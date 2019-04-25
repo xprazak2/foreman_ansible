@@ -40,5 +40,13 @@ module ProxyAPI
       raise ProxyException.new(url, e,
                                N_('Unable to get roles/variables from Ansible'))
     end
+
+
+    def playbooks(import_path)
+      parse(post(import_path, '/playbooks'))
+    rescue *PROXY_ERRORS => e
+      raise ProxyException.new(url, e,
+                               N_('Unable to import playbooks from Smart Proxy'))
+    end
   end
 end
