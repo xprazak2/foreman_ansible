@@ -98,6 +98,11 @@ Foreman::Plugin.register :foreman_ansible do
        :caption => N_('Variables'),
        :url_hash => { :controller => :ansible_variables, :action => :index },
        :parent => :configure_menu
+  menu :top_menu, :ansible_playbooks,
+       :caption => N_('Playbooks'),
+       :url_hash => { :controller => :ansible_playbooks, :action => :index },
+       :parent => :configure_menu
+
 
   apipie_documented_controllers [
     "#{ForemanAnsible::Engine.root}/app/controllers/api/v2/*.rb"

@@ -59,6 +59,8 @@ Rails.application.routes.draw do
     end
 
     resources :ui_ansible_roles, :only => [:index]
+    resources :ansible_playbooks, :only => [:index]
+    # resources :ui_ansible_playbooks
 
     resources :ansible_variables, :except => [:show] do
       resources :lookup_values, :only => [:index, :create, :update, :destroy]
