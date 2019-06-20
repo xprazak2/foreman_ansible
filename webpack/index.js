@@ -4,6 +4,8 @@ import ReportJsonViewer from './components/ReportJsonViewer';
 import AnsibleRolesSwitcher from './components/AnsibleRolesSwitcher';
 import $ from 'jquery';
 
+import './fills_index';
+
 import reducer from './reducer';
 
 componentRegistry.register({
@@ -16,6 +18,7 @@ componentRegistry.register({
 });
 
 injectReducer('foremanAnsible', reducer);
+console.log('ansible index');
 
 window.tfm.initAnsibleRoleSwitcher = () => {
   $(document).on('ContentLoad', evt => {
