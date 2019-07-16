@@ -8,6 +8,7 @@
                   :id => 'ansible_roles_switcher',
                   'data-roles' => {
                     :initialAssignedRoles => roles,
+                    :initialAssignedVariables => [],
                     :inheritedRoleIds => f.object.inherited_ansible_roles.map(&:id),
                     :availableRolesUrl => ui_ansible_roles_path,
                     :resourceId => f.object.id,

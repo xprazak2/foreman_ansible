@@ -15,7 +15,7 @@ import {
 
 export const getAnsibleRoles = (
   url,
-  initialAssignedRoleIds,
+  initialAssignedRoles,
   inheritedRoleIds,
   resourceId,
   resourceName,
@@ -46,6 +46,8 @@ export const getAnsibleRoles = (
 };
 
 const errorHandler = (msg, err) => {
+  console.log(msg)
+  console.log(err)
   const error = {
     errorMsg: 'Failed to fetch Ansible Roles from server.',
     statusText: err.response.statusText,

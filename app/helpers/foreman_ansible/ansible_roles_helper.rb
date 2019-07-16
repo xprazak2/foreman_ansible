@@ -35,13 +35,17 @@ module ForemanAnsible
       _('%s ago') % time_ago_in_words(role.updated_at)
     end
 
-    def roles_attrs(roles, resource_id, resource_name)
-      roles.map do |item|
-        { :id => item.id,
-          :name => item.name,
-          :ansible_variables => variables_attrs(item.ansible_variables, resource_id, resource_name) }
-      end
+    def roles_attrs(roles)
+      roles.map { |item| { :id => item.id, :name => item.name } }
     end
+
+    # def roles_attrs(roles, resource_id, resource_name)
+    #   roles.map do |item|
+    #     { :id => item.id,
+    #       :name => item.name,
+    #       :ansible_variables => variables_attrs(item.ansible_variables, resource_id, resource_name) }
+    #   end
+    # end
 
     def variables_attrs(variables, resource_id, resource_name)
       resolver = ForemanAnsible::OverrideResolver.new(resource_id, resource_name, variables)

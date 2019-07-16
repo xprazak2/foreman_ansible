@@ -16,3 +16,4 @@ locale/*/*.pox
 locale/*/LC_MESSAGES
 Gemfile.lock
 node_modules
+package-lock.json
