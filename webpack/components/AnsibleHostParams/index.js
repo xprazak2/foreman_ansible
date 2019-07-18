@@ -9,4 +9,5 @@ const mapStateToProps = ({ foreman_ansible }, ownProps) => {
            loading: foreman_ansible.ansibleRolesSwitcher.loading }
 }
 
+
 export default connect(mapStateToProps, {})(AnsibleHostParams);

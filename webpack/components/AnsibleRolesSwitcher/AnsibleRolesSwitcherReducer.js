@@ -6,6 +6,7 @@ import {
   ANSIBLE_ROLES_FAILURE,
   ANSIBLE_ROLES_ADD,
   ANSIBLE_ROLES_REMOVE,
+  ANSIBLE_ROLES_OBJECT_ATTRS,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
 } from './AnsibleRolesSwitcherConstants';
 
@@ -24,6 +25,10 @@ export const initialState = Immutable({
     perPage: 10,
   },
   error: { errorMsg: '', status: '', statusText: '' },
+  formObjectAttrs: {
+    resourceName: '',
+    resourceId: null,
+  }
 });
 
 const ansibleRoles = (state = initialState, action) => {
@@ -61,6 +66,8 @@ const ansibleRoles = (state = initialState, action) => {
       });
     case ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE:
       return state.set('assignedPagination', payload.pagination);
+    case ANSIBLE_ROLES_OBJECT_ATTRS:
+      return state.merge({ formObjectAttrs: payload })
     default:
       return state;
   }

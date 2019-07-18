@@ -10,6 +10,7 @@ import {
   ANSIBLE_ROLES_FAILURE,
   ANSIBLE_ROLES_ADD,
   ANSIBLE_ROLES_REMOVE,
+  ANSIBLE_ROLES_OBJECT_ATTRS,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
 } from './AnsibleRolesSwitcherConstants';
 
@@ -46,8 +47,6 @@ export const getAnsibleRoles = (
 };
 
 const errorHandler = (msg, err) => {
-  console.log(msg)
-  console.log(err)
   const error = {
     errorMsg: 'Failed to fetch Ansible Roles from server.',
     statusText: err.response.statusText,
@@ -68,4 +67,9 @@ export const removeAnsibleRole = role => ({
 export const changeAssignedPage = pagination => ({
   type: ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
   payload: { pagination },
+});
+
+export const initializeFormObjectAttrs = values => ({
+  type: ANSIBLE_ROLES_OBJECT_ATTRS,
+  payload: { ...values },
 });
