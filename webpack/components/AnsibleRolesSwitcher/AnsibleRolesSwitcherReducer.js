@@ -8,6 +8,9 @@ import {
   ANSIBLE_ROLES_REMOVE,
   ANSIBLE_ROLES_OBJECT_ATTRS,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
+  ANSIBLE_VARIABLES_REQUEST,
+  ANSIBLE_VARIABLES_SUCCESS,
+  ANSIBLE_VARIABLES_FAILURE,
 } from './AnsibleRolesSwitcherConstants';
 
 export const initialState = Immutable({
@@ -28,7 +31,10 @@ export const initialState = Immutable({
   formObjectAttrs: {
     resourceName: '',
     resourceId: null,
-  }
+  },
+  assignedVariables: [],
+  loadingVariables: false,
+  variablesError: { errorMsg: '', status: '', statusText: ''}
 });
 
 const ansibleRoles = (state = initialState, action) => {
@@ -68,6 +74,13 @@ const ansibleRoles = (state = initialState, action) => {
       return state.set('assignedPagination', payload.pagination);
     case ANSIBLE_ROLES_OBJECT_ATTRS:
       return state.merge({ formObjectAttrs: payload })
+    case ANSIBLE_VARIABLES_REQUEST:
+      return state.set('loadingVariables', true);
+    case ANSIBLE_VARIABLES_SUCCESS: {
+      return state.merge({ assignedVariables: payload.results, loadingVariables: false });
+    }
+    case ANSIBLE_VARIABLES_FAILURE:
+      return state.merge({ variablesError: payload.error, loadingVariables: false });
     default:
       return state;
   }

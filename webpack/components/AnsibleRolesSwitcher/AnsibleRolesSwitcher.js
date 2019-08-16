@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import AvailableRolesList from './components/AvailableRolesList';
 import AssignedRolesList from './components/AssignedRolesList';
 import AnsibleRolesSwitcherError from './components/AnsibleRolesSwitcherError';
-import { excludeAssignedRolesSearch } from './AnsibleRolesSwitcherHelpers';
+import { excludeAssignedRolesSearch, rolesByIdSearch } from './AnsibleRolesSwitcherHelpers';
 
 class AnsibleRolesSwitcher extends React.Component {
   componentDidMount() {
@@ -29,6 +29,13 @@ class AnsibleRolesSwitcher extends React.Component {
       resourceName,
       { page: 1, perPage: 10 },
       excludeAssignedRolesSearch(initialAssignedRoles)
+    );
+
+    this.props.getAnsibleVariables(
+      variablesUrl,
+      rolesByIdSearch(inheritedRoleIds.concat(initialAssignedRoles.map(role => role.id))),
+      resourceName,
+      resourceId
     );
   }
 

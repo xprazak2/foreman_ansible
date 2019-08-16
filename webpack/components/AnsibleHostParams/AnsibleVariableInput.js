@@ -35,7 +35,7 @@ const buttonHelpPopover = (button, popoverText, popoverId) => (
     <OverlayTrigger
       overlay={buttonHelpOverlay(popoverText, popoverId)}
       placement='top'
-      trigger='hover'
+      trigger='hover focus'
       rootClose={true}
     >
       { button }
@@ -57,12 +57,13 @@ export default (props) => {
           toggleOverride,
           fieldOverriden,
           lookupValue,
-          updateLookupValue,
+          fieldValue,
+          updateFieldValue,
           toggleHidden,
           fieldHidden } = props;
 
   console.log(lookupValue)
-
+  console.log(fieldValue)
   return (
     <div className='input-group'>
       <span className="input-group-addon">
@@ -70,9 +71,9 @@ export default (props) => {
       </span>
       <textarea className={`form-control no-stretch ${fieldHidden ? 'masked-input' : ''}`}
                 rows="1"
-                value={ lookupValue.value }
+                value={ fieldValue }
                 name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
-                onChange={(e) => updateLookupValue(e.target.value)}
+                onChange={(e) => updateFieldValue(e.target.value)}
                 disabled={fieldDisabled}/>
       <span className="input-group-btn">
         { unhideButton(toggleHidden, fieldHidden, lookupKey) }
@@ -146,7 +147,7 @@ const lookupKeyWarnings = (required, hasValue) => {
             icon: "warning-triangle-o" });
 }
 
-const showLookupValue = (hidden, lookupValue) => hidden ? lookupValue.hidden_value : lookupValue.value;
+const showLookupValue = (hidden, lookupValue) => hidden ? lookupValue.hidden_value : lookupValue.default_value;
 
 // const rawLookupValue = (lookupKey) => lookupKey.override && lookupKey.current_override ? lookupKey.current_override.value : lookupKey.default_value;
 

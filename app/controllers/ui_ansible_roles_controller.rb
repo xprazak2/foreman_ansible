@@ -3,11 +3,22 @@ class UiAnsibleRolesController < ::Api::V2::BaseController
     super resource
   end
 
+  layout 'api/v2/layouts/index_layout', :only => [:index, :variables]
+
   def index
+    @ui_ansible_roles = resource_scope_for_index(:permission => :view_ansible_roles)#.includes(:ansible_variables)
+    # @override_resolver = ForemanAnsible::OverrideResolver.new(params[:resource_id],
+    #                                                           params[:resource_name],
+    #                                                           AnsibleVariable.where(:ansible_role_id => @ui_ansible_roles.pluck(:id)))
+  end
+
+  def variables
+    # todo: remove pagination
     @ui_ansible_roles = resource_scope_for_index(:permission => :view_ansible_roles).includes(:ansible_variables)
     @override_resolver = ForemanAnsible::OverrideResolver.new(params[:resource_id],
                                                               params[:resource_name],
                                                               AnsibleVariable.where(:ansible_role_id => @ui_ansible_roles.pluck(:id)))
+
   end
 
   # restore original method from find_common to ignore resource nesting

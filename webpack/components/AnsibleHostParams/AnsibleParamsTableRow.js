@@ -11,11 +11,8 @@ class AnsibleParamsTableRow extends React.Component {
     super(props);
 
     const initLookupValue = (lookupKey) => {
-      console.log('current_override')
-      console.log(lookupKey.current_override)
-      console.log(lookupKey.override_values)
       if (!lookupKey.current_override) {
-        return ({ element: 'fqdn', value: lookupKey.default_value, omit: false });
+        return ({ element: 'fqdn', value: lookupKey.default_value, omit: false, overriden: false, defaultValue: lookupKey.default_value });
       }
 
       if (lookupKey.current_override.element === 'fqdn') {
@@ -24,10 +21,10 @@ class AnsibleParamsTableRow extends React.Component {
           value.match === `fqdn=${lookupKey.current_override.element_name}`)
         );
 
-        const override = ({ ...lookupKey.current_override, id: found.id, element: 'fqdn', omit: found.omit });
+        const override = ({ ...lookupKey.current_override, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.default_value });
 
         if (lookupKey['hidden_value?']) {
-          override.hidden_value = found.value
+          override.hidden_value = found.value;
         }
         return override;
       }
@@ -37,14 +34,13 @@ class AnsibleParamsTableRow extends React.Component {
 
     const { lookupKey } = props;
     const lookupValue = initLookupValue(lookupKey)
-    const fieldOverriden = lookupValue.element === 'fqdn';
-    const fieldOmmited = !!lookupKey.omit || lookupValue.omit;
 
     this.state = {
-      fieldOverriden: fieldOverriden,
-      fieldOmmited: fieldOmmited,
+      fieldOverriden: lookupValue.overriden,
+      fieldOmmited: lookupValue.omit,
       lookupValue: lookupValue,
-      fieldDisabled: updateFieldDisabled(fieldOverriden, fieldOmmited),
+      fieldValue: lookupValue.value ? lookupValue.value : lookupValue.defaultValue,
+      fieldDisabled: updateFieldDisabled(lookupValue.overriden, lookupValue.omit),
       fieldHidden: lookupKey['hidden_value?']
     };
 
@@ -54,7 +50,9 @@ class AnsibleParamsTableRow extends React.Component {
   }
 
   toggleOverride(){
-    this.setState({ fieldOverriden: !this.state.fieldOverriden,
+    const newOverridenValue = !this.state.fieldOverriden;
+    this.setState({ fieldOverriden: newOverridenValue,
+                    fieldValue: newOverridenValue ? this.state.fieldValue : this.state.lookupValue.defaultValue,
                     fieldDisabled: updateFieldDisabled(!this.state.fieldOverriden, this.state.fieldOmmited) });
   }
 
@@ -67,8 +65,8 @@ class AnsibleParamsTableRow extends React.Component {
     this.setState({ fieldHidden: !this.state.fieldHidden });
   }
 
-  updateLookupAttr = (attr) => (value) => {
-    this.setState({ lookupValue: Object.assign(this.state.lookupValue, { [attr]: value } )})
+  updateFieldValue = value => {
+    this.setState({ fieldValue: value });
   }
 
   render() {
@@ -86,18 +84,19 @@ class AnsibleParamsTableRow extends React.Component {
       <tr id={constructId(role, lookupKey)} className={`fields overriden`} key={lookupKey.id}>
         { firstKey && lookupKey.id === firstKey.id ? roleNameColumn(role) : null }
         <td className="elipsis param_name">{ lookupKey.parameter }</td>
-        <td className="elipsis">{ __('Ansible Variable') }</td>
+        <td className="elipsis">{ lookupKey.parameter_type }</td>
         <td className={ false ? 'has-error' : '' }>
           <AnsibleVariableInput role={role}
                                 lookupKey={lookupKey}
                                 lookupValue={this.state.lookupValue}
-                                updateLookupValue={this.updateLookupAttr('value')}
+                                updateFieldValue={this.updateFieldValue}
                                 toggleOverride={this.toggleOverride}
                                 toggleHidden={this.toggleHidden}
                                 fieldDisabled={this.state.fieldDisabled}
                                 fieldOverriden={this.state.fieldOverriden}
                                 fieldOmmited={this.state.fieldOmmited}
-                                fieldHidden={this.state.fieldHidden}/>
+                                fieldHidden={this.state.fieldHidden}
+                                fieldValue={this.state.fieldValue}/>
         </td>
         <td className="ca">
           <input type="checkbox"

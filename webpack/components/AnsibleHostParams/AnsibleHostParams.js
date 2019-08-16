@@ -9,9 +9,6 @@ import GenericPopover from './GenericPopover';
 import './styles.scss';
 
 export default (props) => {
-
-  console.log(props)
-
   const popoverText = __('Foreman will not send this paramenter in classification output');
 
   const popoverTitle = __('Omit parameter from classification');
@@ -27,7 +24,7 @@ export default (props) => {
                 <thead className="white-header">
                   <tr>
                     <th className='col-md-2'>{ __('Ansible Role') }</th>
-                    <th className='col-md-2'>{  __('Name') }</th>
+                    <th className='col-md-2'>{ __('Name') }</th>
                     <th className='col-md-2'>{ __('Type') }</th>
                     <th className='col-md-5'>{ __('Value') }</th>
                     <th className='col-md-1 ca'>

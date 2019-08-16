@@ -12,6 +12,9 @@ import {
   ANSIBLE_ROLES_REMOVE,
   ANSIBLE_ROLES_OBJECT_ATTRS,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
+  ANSIBLE_VARIABLES_REQUEST,
+  ANSIBLE_VARIABLES_SUCCESS,
+  ANSIBLE_VARIABLES_FAILURE,
 } from './AnsibleRolesSwitcherConstants';
 
 export const getAnsibleRoles = (
@@ -44,6 +47,23 @@ export const getAnsibleRoles = (
       })
     )
     .catch(error => dispatch(errorHandler(ANSIBLE_ROLES_FAILURE, error)));
+};
+
+export const getAnsibleVariables = (url, search, resourceName, resourceId) => dispatch => {
+  dispatch({ type: ANSIBLE_VARIABLES_REQUEST });
+
+  const params = { ...(search || {}), ...propsToSnakeCase({ resourceName, resourceId }) };
+  return api
+    .get(url, {}, params)
+    .then(({ data }) =>
+      dispatch({
+        type: ANSIBLE_VARIABLES_SUCCESS,
+        payload: {
+          ...propsToCamelCase(data),
+        }
+      })
+    )
+    .catch(error => dispatch(errorHandler(ANSIBLE_VARIABLES_FAILURE, error)));
 };
 
 const errorHandler = (msg, err) => {

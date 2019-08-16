@@ -58,7 +58,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :ui_ansible_roles, :only => [:index]
+    resources :ui_ansible_roles, :only => [:index] do
+      collection do
+        get :variables
+      end
+    end
     resources :ui_ansible_variables, :only => [:index]
 
     resources :ansible_variables, :except => [:show] do
