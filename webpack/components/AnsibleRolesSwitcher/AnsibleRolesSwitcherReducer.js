@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { sortBy } from 'lodash';
 
 import {
   ANSIBLE_ROLES_REQUEST,
@@ -11,6 +12,7 @@ import {
   ANSIBLE_VARIABLES_REQUEST,
   ANSIBLE_VARIABLES_SUCCESS,
   ANSIBLE_VARIABLES_FAILURE,
+  ANSIBLE_VARIABLES_REMOVE,
 } from './AnsibleRolesSwitcherConstants';
 
 export const initialState = Immutable({
@@ -77,10 +79,12 @@ const ansibleRoles = (state = initialState, action) => {
     case ANSIBLE_VARIABLES_REQUEST:
       return state.set('loadingVariables', true);
     case ANSIBLE_VARIABLES_SUCCESS: {
-      return state.merge({ assignedVariables: payload.results, loadingVariables: false });
+      return state.merge({ assignedVariables: sortBy(payload.results.concat(state.assignedVariables), ['name']), loadingVariables: false });
     }
     case ANSIBLE_VARIABLES_FAILURE:
       return state.merge({ variablesError: payload.error, loadingVariables: false });
+    case ANSIBLE_VARIABLES_REMOVE:
+      return state.merge({ assignedVariables: state.assignedVariables.filter(ansibleRole => ansibleRole.id !== payload.role.id )});
     default:
       return state;
   }

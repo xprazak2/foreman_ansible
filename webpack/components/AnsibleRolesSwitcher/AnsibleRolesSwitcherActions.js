@@ -4,6 +4,8 @@ import {
   propsToCamelCase,
 } from 'foremanReact/common/helpers';
 
+import { rolesByIdSearch } from './AnsibleRolesSwitcherHelpers';
+
 import {
   ANSIBLE_ROLES_REQUEST,
   ANSIBLE_ROLES_SUCCESS,
@@ -15,6 +17,7 @@ import {
   ANSIBLE_VARIABLES_REQUEST,
   ANSIBLE_VARIABLES_SUCCESS,
   ANSIBLE_VARIABLES_FAILURE,
+  ANSIBLE_VARIABLES_REMOVE,
 } from './AnsibleRolesSwitcherConstants';
 
 export const getAnsibleRoles = (
@@ -74,15 +77,28 @@ const errorHandler = (msg, err) => {
   return { type: msg, payload: { error } };
 };
 
-export const addAnsibleRole = role => ({
-  type: ANSIBLE_ROLES_ADD,
-  payload: { role },
-});
+export const addAnsibleRole = (role, variablesUrl, resourceName, resourceId) => dispatch => {
+  dispatch({
+    type: ANSIBLE_ROLES_ADD,
+    payload: { role },
+  });
 
-export const removeAnsibleRole = role => ({
-  type: ANSIBLE_ROLES_REMOVE,
-  payload: { role },
-});
+  const search = rolesByIdSearch([role.id]);
+
+  getAnsibleVariables(variablesUrl, search, resourceName, resourceId)(dispatch);
+};
+
+export const removeAnsibleRole = role => dispatch => {
+  dispatch({
+    type: ANSIBLE_ROLES_REMOVE,
+    payload: { role },
+  });
+
+  dispatch({
+    type: ANSIBLE_VARIABLES_REMOVE,
+    payload: { role },
+  });
+};
 
 export const changeAssignedPage = pagination => ({
   type: ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,

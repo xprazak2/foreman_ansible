@@ -61,6 +61,7 @@ class AnsibleRolesSwitcher extends React.Component {
       inheritedRoleIds,
       resourceId,
       resourceName,
+      variablesUrl,
     } = this.props.data;
 
     const onListingChange = paginationArgs =>
@@ -89,6 +90,9 @@ class AnsibleRolesSwitcher extends React.Component {
               onListingChange={onListingChange}
               onAddRole={addAnsibleRole}
               loading={loading}
+              resourceName={resourceName}
+              resourceId={resourceId}
+              variablesUrl={variablesUrl}
             />
           </Col>
 

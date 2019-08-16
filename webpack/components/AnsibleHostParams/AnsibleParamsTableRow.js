@@ -23,9 +23,9 @@ class AnsibleParamsTableRow extends React.Component {
 
         const override = ({ ...lookupKey.current_override, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.default_value });
 
-        if (lookupKey['hidden_value?']) {
-          override.hidden_value = found.value;
-        }
+        // if (lookupKey['hidden_value?']) {
+        //   override.hidden_value = found.value;
+        // }
         return override;
       }
 
@@ -41,7 +41,7 @@ class AnsibleParamsTableRow extends React.Component {
       lookupValue: lookupValue,
       fieldValue: lookupValue.value ? lookupValue.value : lookupValue.defaultValue,
       fieldDisabled: updateFieldDisabled(lookupValue.overriden, lookupValue.omit),
-      fieldHidden: lookupKey['hidden_value?']
+      fieldHiddenValue: lookupKey['hidden_value?']
     };
 
     this.toggleOverride = this.toggleOverride.bind(this);
@@ -62,7 +62,7 @@ class AnsibleParamsTableRow extends React.Component {
   }
 
   toggleHidden() {
-    this.setState({ fieldHidden: !this.state.fieldHidden });
+    this.setState({ fieldHiddenValue: !this.state.fieldHiddenValue });
   }
 
   updateFieldValue = value => {
@@ -95,7 +95,7 @@ class AnsibleParamsTableRow extends React.Component {
                                 fieldDisabled={this.state.fieldDisabled}
                                 fieldOverriden={this.state.fieldOverriden}
                                 fieldOmmited={this.state.fieldOmmited}
-                                fieldHidden={this.state.fieldHidden}
+                                fieldHiddenValue={this.state.fieldHiddenValue}
                                 fieldValue={this.state.fieldValue}/>
         </td>
         <td className="ca">

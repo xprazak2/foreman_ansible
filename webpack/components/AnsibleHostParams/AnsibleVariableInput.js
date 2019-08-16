@@ -8,7 +8,7 @@ const keyOverlay = (lookupKey, lookupValue, hidden) => (
       <b>Description: </b> { lookupKey.description }<br/>
       <b>Type: </b> { lookupKey.parameter_type }<br/>
       <b>Matcher: </b> { formatMatcher(lookupKey.current_override) }<br/>
-      <b>Inherited Value: </b> { showLookupValue(lookupKey, lookupValue) }<br/>
+      <b>Inherited Value: </b> { showLookupValue(hidden, lookupKey, lookupValue) }<br/>
     </div>
   </Popover>
 );
@@ -60,23 +60,23 @@ export default (props) => {
           fieldValue,
           updateFieldValue,
           toggleHidden,
-          fieldHidden } = props;
+          fieldHiddenValue } = props;
 
   console.log(lookupValue)
   console.log(fieldValue)
   return (
     <div className='input-group'>
       <span className="input-group-addon">
-        { keyInfoPopover(lookupKey, lookupValue, fieldHidden) }
+        { keyInfoPopover(lookupKey, lookupValue, fieldHiddenValue) }
       </span>
-      <textarea className={`form-control no-stretch ${fieldHidden ? 'masked-input' : ''}`}
+      <textarea className={`form-control no-stretch ${fieldHiddenValue ? 'masked-input' : ''}`}
                 rows="1"
                 value={ fieldValue }
                 name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
                 onChange={(e) => updateFieldValue(e.target.value)}
                 disabled={fieldDisabled}/>
       <span className="input-group-btn">
-        { unhideButton(toggleHidden, fieldHidden, lookupKey) }
+        { unhideButton(toggleHidden, fieldHiddenValue, lookupKey) }
         { fullscreenButton() }
         { overrideButton(toggleOverride, fieldOverriden, lookupKey.id) }
       </span>
@@ -147,9 +147,7 @@ const lookupKeyWarnings = (required, hasValue) => {
             icon: "warning-triangle-o" });
 }
 
-const showLookupValue = (hidden, lookupValue) => hidden ? lookupValue.hidden_value : lookupValue.default_value;
-
-// const rawLookupValue = (lookupKey) => lookupKey.override && lookupKey.current_override ? lookupKey.current_override.value : lookupKey.default_value;
+const showLookupValue = (hidden, lookupKey, lookupValue) => hidden ? '*****' : lookupKey.default_value;
 
 // todo
 const fullscreenButton = () => {
