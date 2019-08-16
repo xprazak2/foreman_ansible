@@ -6,30 +6,26 @@ import AnsibleVariableInput from './AnsibleVariableInput';
 
 const updateFieldDisabled = (overriden, ommited) => !overriden || ommited
 
-class AnsibleParamsTableRow extends React.Component {
+class AnsibleVariablesTableRow extends React.Component {
   constructor(props) {
     super(props);
 
     const initLookupValue = (lookupKey) => {
-      if (!lookupKey.current_override) {
-        return ({ element: 'fqdn', value: lookupKey.default_value, omit: false, overriden: false, defaultValue: lookupKey.default_value });
+      if (!lookupKey.currentOverride) {
+        return ({ element: 'fqdn', value: lookupKey.defaultValue, omit: false, overriden: false, defaultValue: lookupKey.defaultValue });
       }
 
-      if (lookupKey.current_override.element === 'fqdn') {
-        const found = find(lookupKey.override_values, (value) => (
-          // value.value === lookupKey.current_override.value &&
-          value.match === `fqdn=${lookupKey.current_override.element_name}`)
+      if (lookupKey.currentOverride.element === 'fqdn') {
+        const found = find(lookupKey.overrideValues, (value) => (
+          value.match === `fqdn=${lookupKey.currentOverride.elementName}`)
         );
 
-        const override = ({ ...lookupKey.current_override, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.default_value });
+        const override = ({ ...lookupKey.currentOverride, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.defaultValue });
 
-        // if (lookupKey['hidden_value?']) {
-        //   override.hidden_value = found.value;
-        // }
         return override;
       }
 
-      return lookupKey.current_override;
+      return lookupKey.currentOverride;
     }
 
     const { lookupKey } = props;
@@ -41,27 +37,23 @@ class AnsibleParamsTableRow extends React.Component {
       lookupValue: lookupValue,
       fieldValue: lookupValue.value ? lookupValue.value : lookupValue.defaultValue,
       fieldDisabled: updateFieldDisabled(lookupValue.overriden, lookupValue.omit),
-      fieldHiddenValue: lookupKey['hidden_value?']
+      fieldHiddenValue: lookupKey.hiddenValue
     };
-
-    this.toggleOverride = this.toggleOverride.bind(this);
-    this.toggleOmit = this.toggleOmit.bind(this);
-    this.toggleHidden = this.toggleHidden.bind(this);
   }
 
-  toggleOverride(){
+  toggleOverride = () => {
     const newOverridenValue = !this.state.fieldOverriden;
     this.setState({ fieldOverriden: newOverridenValue,
                     fieldValue: newOverridenValue ? this.state.fieldValue : this.state.lookupValue.defaultValue,
                     fieldDisabled: updateFieldDisabled(!this.state.fieldOverriden, this.state.fieldOmmited) });
   }
 
-  toggleOmit() {
+  toggleOmit = () => {
     this.setState({ fieldOmmited: !this.state.fieldOmmited,
                     fieldDisabled: updateFieldDisabled(this.state.fieldOverriden, !this.state.fieldOmmited) });
   }
 
-  toggleHidden() {
+  toggleHidden = () => {
     this.setState({ fieldHiddenValue: !this.state.fieldHiddenValue });
   }
 
@@ -73,7 +65,7 @@ class AnsibleParamsTableRow extends React.Component {
     const { role, lookupKey, firstKey } = this.props;
 
     const roleNameColumn = role => {
-      return (<td className="elipsis" rowSpan={role.ansible_variables.length}>{ role.name }</td>);
+      return (<td className="elipsis" rowSpan={role.ansibleVariables.length}>{ role.name }</td>);
     }
 
     const constructId = (role, lookupKey) => `ansible_role_${role.id}_params[${lookupKey.id}]`;
@@ -84,7 +76,7 @@ class AnsibleParamsTableRow extends React.Component {
       <tr id={constructId(role, lookupKey)} className={`fields overriden`} key={lookupKey.id}>
         { firstKey && lookupKey.id === firstKey.id ? roleNameColumn(role) : null }
         <td className="elipsis param_name">{ lookupKey.parameter }</td>
-        <td className="elipsis">{ lookupKey.parameter_type }</td>
+        <td className="elipsis">{ lookupKey.parameterType }</td>
         <td className={ false ? 'has-error' : '' }>
           <AnsibleVariableInput role={role}
                                 lookupKey={lookupKey}
@@ -128,4 +120,4 @@ class AnsibleParamsTableRow extends React.Component {
   }
 }
 
-export default AnsibleParamsTableRow;
+export default AnsibleVariablesTableRow;

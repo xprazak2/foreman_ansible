@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 
 import AnsibleHostParams from './AnsibleHostParams';
+import { selectAssignedVariables, selectVariablesLoading } from '../AnsibleRolesSwitcher/AnsibleRolesSwitcherSelectors';
 
-const mapStateToProps = ({ foremanAnsible }, ownProps) => {
-  return { assignedRoles: foremanAnsible.ansibleRolesSwitcher.assignedVariables,
-           loading: foremanAnsible.ansibleRolesSwitcher.loadingVariables }
+const mapStateToProps = (state, ownProps) => {
+  return { assignedRoles: selectAssignedVariables(state),
+           loading: selectVariablesLoading(state) }
 }
 
 export default connect(mapStateToProps, {})(AnsibleHostParams);

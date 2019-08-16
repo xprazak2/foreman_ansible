@@ -1,5 +1,4 @@
 import Immutable from 'seamless-immutable';
-import { sortBy } from 'lodash';
 
 import {
   ANSIBLE_ROLES_REQUEST,
@@ -79,7 +78,8 @@ const ansibleRoles = (state = initialState, action) => {
     case ANSIBLE_VARIABLES_REQUEST:
       return state.set('loadingVariables', true);
     case ANSIBLE_VARIABLES_SUCCESS: {
-      return state.merge({ assignedVariables: sortBy(payload.results.concat(state.assignedVariables), ['name']), loadingVariables: false });
+
+      return state.merge({ assignedVariables: payload.results.concat(state.assignedVariables), loadingVariables: false });
     }
     case ANSIBLE_VARIABLES_FAILURE:
       return state.merge({ variablesError: payload.error, loadingVariables: false });

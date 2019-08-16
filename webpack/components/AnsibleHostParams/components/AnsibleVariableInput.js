@@ -5,17 +5,17 @@ import { Popover, OverlayTrigger, Button, Icon } from 'patternfly-react';
 const keyOverlay = (lookupKey, lookupValue, hidden) => (
   <Popover id="popover" title='Original value info'>
     <div>
-      <b>Description: </b> { lookupKey.description }<br/>
-      <b>Type: </b> { lookupKey.parameter_type }<br/>
-      <b>Matcher: </b> { formatMatcher(lookupKey.current_override) }<br/>
-      <b>Inherited Value: </b> { showLookupValue(hidden, lookupKey, lookupValue) }<br/>
+      <b>Description: </b>{lookupKey.description}<br/>
+      <b>Type: </b> {lookupKey.parameterType}<br/>
+      <b>Matcher: </b>{formatMatcher(lookupKey.currentOverride)}<br/>
+      <b>Inherited Value: </b>{showLookupValue(hidden, lookupKey, lookupValue)}<br/>
     </div>
   </Popover>
 );
 
 const formatMatcher = (currentOverride) =>
   currentOverride ?
-  (currentOverride.element + ' (' + currentOverride.element_name +')') :
+  (currentOverride.element + ' (' + currentOverride.elementName +')') :
   ''
 
 const keyInfoPopover = (lookupKey, lookupValue, hidden) => (
@@ -42,50 +42,44 @@ const buttonHelpPopover = (button, popoverText, popoverId) => (
     </OverlayTrigger>
 );
 
-const buttonHelpOverlay = (popoverText, popoverId) => (
-  <Popover id={popoverId}>
+const buttonHelpOverlay = (popoverText, popoverId, popoverTitle) => (
+  <Popover id={popoverId} title={popoverTitle}>
     <div>
       { popoverText }
     </div>
   </Popover>
 );
 
-export default (props) => {
-  const lookupKey = props.lookupKey;
-
-  const { fieldDisabled,
-          toggleOverride,
-          fieldOverriden,
-          lookupValue,
-          fieldValue,
-          updateFieldValue,
-          toggleHidden,
-          fieldHiddenValue } = props;
-
-  console.log(lookupValue)
-  console.log(fieldValue)
-  return (
-    <div className='input-group'>
-      <span className="input-group-addon">
-        { keyInfoPopover(lookupKey, lookupValue, fieldHiddenValue) }
-      </span>
-      <textarea className={`form-control no-stretch ${fieldHiddenValue ? 'masked-input' : ''}`}
-                rows="1"
-                value={ fieldValue }
-                name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
-                onChange={(e) => updateFieldValue(e.target.value)}
-                disabled={fieldDisabled}/>
-      <span className="input-group-btn">
-        { unhideButton(toggleHidden, fieldHiddenValue, lookupKey) }
-        { fullscreenButton() }
-        { overrideButton(toggleOverride, fieldOverriden, lookupKey.id) }
-      </span>
-    </div>
-  );
-}
+const AnsibleVariableInput = ({
+  fieldDisabled,
+  toggleOverride,
+  fieldOverriden,
+  lookupKey,
+  lookupValue,
+  fieldValue,
+  updateFieldValue,
+  toggleHidden,
+  fieldHiddenValue }) => (
+  <div className='input-group'>
+    <span className="input-group-addon">
+      { keyInfoPopover(lookupKey, lookupValue, fieldHiddenValue) }
+    </span>
+    <textarea className={`form-control no-stretch ${fieldHiddenValue ? 'masked-input' : ''}`}
+              rows="1"
+              value={ fieldValue }
+              name={`host[lookup_values_attributes][${lookupKey.id}][value]`}
+              onChange={(e) => updateFieldValue(e.target.value)}
+              disabled={fieldDisabled}/>
+    <span className="input-group-btn">
+      { unhideButton(toggleHidden, fieldHiddenValue, lookupKey) }
+      { fullscreenButton() }
+      { overrideButton(toggleOverride, fieldOverriden, lookupKey.id) }
+    </span>
+  </div>
+);
 
 const unhideButton = (toggleHidden, hidden, lookupKey) => {
-  if (!lookupKey['hidden_value?']) {
+  if (!lookupKey.hiddenValue) {
     return '';
   }
 
@@ -147,7 +141,7 @@ const lookupKeyWarnings = (required, hasValue) => {
             icon: "warning-triangle-o" });
 }
 
-const showLookupValue = (hidden, lookupKey, lookupValue) => hidden ? '*****' : lookupKey.default_value;
+const showLookupValue = (hidden, lookupKey, lookupValue) => hidden ? '*****' : lookupKey.defaultValue;
 
 // todo
 const fullscreenButton = () => {
@@ -158,3 +152,5 @@ const fullscreenButton = () => {
   );
   return;
 }
+
+export default AnsibleVariableInput;
