@@ -10,7 +10,7 @@ const genericOverlay = ({ popoverText, popoverId, popoverTitle }) => (
   </Popover>
 );
 
-export default ({ button, popoverText, popoverId, popoverOverlay, trigger, placement, popoverTitle }) => (
+const GenericPopover = ({ button, popoverText, popoverId, popoverOverlay, trigger, placement, popoverTitle }) => (
     <OverlayTrigger
       overlay={ popoverOverlay || genericOverlay({ popoverText, popoverId, popoverTitle }) }
       placement={ placement || 'top' }
@@ -20,3 +20,5 @@ export default ({ button, popoverText, popoverId, popoverOverlay, trigger, place
       { button }
     </OverlayTrigger>
 );
+
+export default GenericPopover;

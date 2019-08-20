@@ -4,7 +4,7 @@ import { Spinner, Button, Icon } from 'patternfly-react';
 import AnsibleVariablesTableRows from './components/AnsibleVariablesTableRows';
 import GenericPopover from './components/GenericPopover';
 
-import './styles.scss';
+import './AnsibleHostParams.scss';
 
 const AnsibleHostParams = ({ loading, assignedRoles }) => {
   const popoverText = __('Foreman will not send this paramenter in classification output');
