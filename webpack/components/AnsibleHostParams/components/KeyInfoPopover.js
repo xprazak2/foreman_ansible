@@ -5,9 +5,10 @@ import { Popover, Icon } from 'patternfly-react';
 import GenericPopover from './GenericPopover';
 
 
-const keyOverlay = (lookupKey, lookupValue, hidden) => (
+const keyOverlay = (lookupKey, lookupValue, hidden, additionalText) => (
   <Popover id="popover" title='Original value info'>
     <div>
+      { additionalText && <span dangerouslySetInnerHTML={{ __html: additionalText }} /> }
       <b>Description: </b>{lookupKey.description}<br/>
       <b>Type: </b> {lookupKey.parameterType}<br/>
       <b>Matcher: </b>{formatMatcher(lookupKey.currentOverride)}<br/>
@@ -23,26 +24,13 @@ const formatMatcher = (currentOverride) =>
   (currentOverride.element + ' (' + currentOverride.elementName +')') :
   ''
 
-// const keyInfoPopover = (lookupKey, lookupValue, hidden) => (
-//   <div style={{ textAlign: 'center' }}>
-//     <OverlayTrigger
-//       overlay={keyOverlay(lookupKey, lookupValue, hidden)}
-//       placement='top'
-//       trigger='click'
-//       rootClose={true}
-//     >
-//       <a href="#" className="popover-pf-info"><Icon type="pf" name="info" /></a>
-//     </OverlayTrigger>
-//   <div style={{ textAlign: 'center' }}>
-//   </div>
-// )
+const KeyInfoPopover = ({ lookupKey, lookupValue, hidden, keyWarnings }) => {
 
-const KeyInfoPopover = ({ lookupKey, lookupValue, hidden }) => {
-  const button = <a href="#" className="popover-pf-info"><Icon type="pf" name="info" /></a>;
+  const button = <a href="#" className="popover-pf-info"><Icon type="pf" name={keyWarnings.icon} /></a>;
   return (
     <div style={{ textAlign: 'center' }}>
       <GenericPopover
-        popoverOverlay={keyOverlay(lookupKey, lookupValue, hidden)}
+        popoverOverlay={keyOverlay(lookupKey, lookupValue, hidden, keyWarnings.text)}
         button={button}
       />
     </div>

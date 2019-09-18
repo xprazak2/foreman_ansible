@@ -2,6 +2,8 @@ import React from 'react';
 
 import { isEmpty, find } from 'lodash';
 
+import { sprintf } from 'foremanReact/common/I18n';
+
 import AnsibleVariableInput from './AnsibleVariableInput';
 
 const updateFieldDisabled = (overriden, ommited) => !overriden || ommited
@@ -72,12 +74,77 @@ class AnsibleVariablesTableRow extends React.Component {
 
     const overrideFieldName = (lookupKey, attr) => `host[lookup_values_attributes][${lookupKey.id}][${attr}]`;
 
+    const lookupKeyWarnings = (lookupKey, fieldValue, fieldDisabled) => {
+      const validRes = { text: '', icon: 'info', valid: true }
+
+      const invalidFactory = (text, msg) => ({
+        text,
+        icon: "error-circle-o",
+        valid: false,
+        msg
+      });
+
+      const validateValue = (condition, onInvalid) => {
+        if (condition(lookupKey.validatorRule, fieldValue)) {
+          return validRes;
+        } else {
+          return onInvalid;
+        }
+      }
+
+      if (fieldDisabled) {
+        return validRes;
+      }
+
+      if (lookupKey.required) {
+        const pleaseChange = `${__("Required parameter with invalid value.")}<br/><b>${__("Please change!")}</b><br/>`;
+
+        switch(lookupKey.validatorType) {
+          case "None":
+            return validateValue(
+              (rule, value) => value,
+              invalidFactory(
+                `${__("Required parameter without value.")}<br/><b>${__("Please override!")}</b><br/>`,
+                __("Value can't be blank")
+              )
+            )
+          case "regexp": {
+            return validateValue(
+              (rule, value) => new RegExp(rule).test(value),
+              invalidFactory(
+                pleaseChange,
+                sprintf(__("Invalid value, expected to match a regex: %s"), lookupKey.validatorRule)
+              )
+            )
+          }
+          case "list":
+            return validateValue(
+              (rule, value) => rule.split(',').find(item => item.trim() === value),
+              invalidFactory(
+                pleaseChange,
+                sprintf(__("Invalid value, expected one of: %s"), lookupKey.validatorRule)
+              )
+            )
+        }
+      }
+
+      if (fieldValue) {
+        return validRes;
+      }
+
+      return ({ text: `${__("Optional parameter without value.")}<br/><i>${__("Still managed by Foreman, the value will be empty.")}</i><br/>`,
+                icon: "warning-triangle-o",
+                valid: true });
+    }
+
+    const keyWarnings = lookupKeyWarnings(lookupKey, this.state.fieldValue, this.state.fieldDisabled)
+
     return (
       <tr id={constructId(role, lookupKey)} className={`fields overriden`} key={lookupKey.id}>
         { firstKey && lookupKey.id === firstKey.id ? roleNameColumn(role) : null }
         <td className="elipsis param_name">{ lookupKey.parameter }</td>
         <td className="elipsis">{ lookupKey.parameterType }</td>
-        <td className={ false ? 'has-error' : '' }>
+        <td className={ !keyWarnings.valid && !this.state.fieldDisabled ? 'has-error' : '' }>
           <AnsibleVariableInput role={role}
                                 lookupKey={lookupKey}
                                 lookupValue={this.state.lookupValue}
@@ -88,7 +155,9 @@ class AnsibleVariablesTableRow extends React.Component {
                                 fieldOverriden={this.state.fieldOverriden}
                                 fieldOmmited={this.state.fieldOmmited}
                                 fieldHiddenValue={this.state.fieldHiddenValue}
-                                fieldValue={this.state.fieldValue}/>
+                                fieldValue={this.state.fieldValue}
+                                keyWarnings={keyWarnings}/>
+          <span className="help-block">{keyWarnings.msg}</span>
         </td>
         <td className="ca">
           <input type="checkbox"

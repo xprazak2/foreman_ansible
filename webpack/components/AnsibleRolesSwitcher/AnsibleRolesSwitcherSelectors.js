@@ -73,4 +73,4 @@ export const selectAssignedVariables = state =>
     Immutable.asMutable(uniqBy(switcherState(state).assignedVariables, 'id')).sort(compare)
   ));
 
-export const selectVariablesLoading = state => state.loadingVariables;
+export const selectVariablesLoading = state => switcherState(state).loadingVariables;
