@@ -6,12 +6,14 @@ import GenericPopover from './components/GenericPopover';
 
 import './AnsibleHostParams.scss';
 
-const AnsibleHostParams = ({ loading, assignedRoles }) => {
+const AnsibleHostParams = ({ loading, assignedRoles, resourceErrors, highlightTabErrors }) => {
   const popoverText = __('Foreman will not send this paramenter in classification output');
 
   const popoverTitle = __('Omit parameter from classification');
 
   const omitHelpButton = <a href='#'><Icon type="pf" name="info" /></a>
+
+  highlightTabErrors();
 
   return (
     <div>
@@ -35,7 +37,7 @@ const AnsibleHostParams = ({ loading, assignedRoles }) => {
               </tr>
             </thead>
             <tbody>
-              <AnsibleVariablesTableRows assignedRoles={assignedRoles} />
+              <AnsibleVariablesTableRows assignedRoles={assignedRoles} resourceErrors={resourceErrors.lookupValues || []} />
             </tbody>
           </table>
         </Spinner>

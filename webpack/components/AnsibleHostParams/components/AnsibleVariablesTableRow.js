@@ -30,15 +30,15 @@ class AnsibleVariablesTableRow extends React.Component {
       return lookupKey.currentOverride;
     }
 
-    const { lookupKey } = props;
+    const { lookupKey, resourceError } = props;
     const lookupValue = initLookupValue(lookupKey)
 
     this.state = {
-      fieldOverriden: lookupValue.overriden,
-      fieldOmmited: lookupValue.omit,
+      fieldOverriden: resourceError ? true : lookupValue.overriden,
+      fieldOmmited: resourceError ? false : lookupValue.omit,
       lookupValue: lookupValue,
-      fieldValue: lookupValue.value ? lookupValue.value : lookupValue.defaultValue,
-      fieldDisabled: updateFieldDisabled(lookupValue.overriden, lookupValue.omit),
+      fieldValue: resourceError ? resourceError.value : (lookupValue.value ? lookupValue.value : lookupValue.defaultValue),
+      fieldDisabled: resourceError ? false : updateFieldDisabled(lookupValue.overriden, lookupValue.omit),
       fieldHiddenValue: lookupKey.hiddenValue
     };
   }

@@ -2,10 +2,13 @@ import { connect } from 'react-redux';
 
 import AnsibleHostParams from './AnsibleHostParams';
 import { selectAssignedVariables, selectVariablesLoading } from '../AnsibleRolesSwitcher/AnsibleRolesSwitcherSelectors';
+import { selectResourceErrors } from 'foremanReact/components/ResourceErrors/ResourceErrorsSelectors';
 
 const mapStateToProps = state => {
   return { assignedRoles: selectAssignedVariables(state),
-           loading: selectVariablesLoading(state) }
+           loading: selectVariablesLoading(state),
+           resourceErrors: selectResourceErrors(state),
+           highlightTabErrors: window.tfm.tools.highlightTabErrors }
 }
 
 export default connect(mapStateToProps, {})(AnsibleHostParams);
