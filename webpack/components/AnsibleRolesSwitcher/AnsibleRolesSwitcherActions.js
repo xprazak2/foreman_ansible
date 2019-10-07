@@ -12,7 +12,7 @@ import {
   ANSIBLE_ROLES_FAILURE,
   ANSIBLE_ROLES_ADD,
   ANSIBLE_ROLES_REMOVE,
-  ANSIBLE_ROLES_OBJECT_ATTRS,
+  ANSIBLE_ROLES_FORM_OBJECT,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
   ANSIBLE_VARIABLES_REQUEST,
   ANSIBLE_VARIABLES_SUCCESS,
@@ -105,7 +105,7 @@ export const changeAssignedPage = pagination => ({
   payload: { pagination },
 });
 
-export const initializeFormObjectAttrs = values => ({
-  type: ANSIBLE_ROLES_OBJECT_ATTRS,
-  payload: { ...values },
+export const initFormObjectAttrs = formObject => ({
+  type: ANSIBLE_ROLES_FORM_OBJECT,
+  payload: { formObject },
 });

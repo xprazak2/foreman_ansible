@@ -74,3 +74,5 @@ export const selectAssignedVariables = state =>
   ));
 
 export const selectVariablesLoading = state => switcherState(state).loadingVariables;
+
+export const selectFormObject = state => switcherState(state).formObject;

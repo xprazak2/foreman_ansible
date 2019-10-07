@@ -1,35 +1,113 @@
 import React, { useState } from 'react';
 
-import { isEmpty, find } from 'lodash';
+import { isEmpty, find, lowerCase } from 'lodash';
 
 import { sprintf } from 'foremanReact/common/I18n';
 
 import AnsibleVariableInput from './AnsibleVariableInput';
 
-const updateFieldDisabled = (overriden, ommited) => !overriden || ommited
+const updateFieldDisabled = (overriden, ommited) => !overriden || ommited;
 
-const AnsibleVariablesTableRow = (props) => {
-  const initLookupValue = (lookupKey) => {
-    if (!lookupKey.currentOverride) {
-      return ({ element: 'fqdn', value: lookupKey.defaultValue, omit: false, overriden: false, defaultValue: lookupKey.defaultValue });
-    }
+const matcherElement = modelName => modelName === 'hostgroup' ? 'hostgroup' : 'fqdn';
 
-    if (lookupKey.currentOverride.element === 'fqdn') {
-      const found = find(lookupKey.overrideValues, (value) => (
-        value.match === `fqdn=${lookupKey.currentOverride.elementName}`)
-      );
+const fieldElement = modelName => modelName === 'hostgroup' ? 'hostgroup' : 'host';
 
-      const override = ({ ...lookupKey.currentOverride, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.defaultValue });
+const constructId = (role, lookupKey) => `ansible_role_${role.id}_params[${lookupKey.id}]`;
 
-      return override;
-    }
+const roleNameColumn = role => {
+    return (<td className="elipsis" rowSpan={role.ansibleVariables.length}>{ role.name }</td>);
+  };
 
-    return lookupKey.currentOverride;
+const overrideFieldName = (lookupKey, attr, modelField) => `${modelField}[lookup_values_attributes][${lookupKey.id}][${attr}]`;
+
+const initLookupValue = (lookupKey, formObject) => {
+  const modelName = lowerCase(formObject.resourceName);
+  const valueMatch = matcherElement(modelName);
+
+  if (!lookupKey.currentOverride) {
+    return ({ element: valueMatch, value: lookupKey.defaultValue, omit: false, overriden: false, defaultValue: lookupKey.defaultValue });
   }
 
-  const { lookupKey, resourceError, role, firstKey } = props;
+  if (lookupKey.currentOverride.element === valueMatch) {
+    const found = find(lookupKey.overrideValues, (value) => (
+      value.match === `${valueMatch}=${lookupKey.currentOverride.elementName}`)
+    );
 
-  const [lookupValue, setLookupValue] = useState(initLookupValue(lookupKey));
+    const override = ({ ...lookupKey.currentOverride, id: found.id, omit: found.omit, overriden: true, defaultValue: lookupKey.defaultValue });
+
+    return override;
+  }
+
+  return lookupKey.currentOverride;
+};
+
+const lookupKeyWarnings = (lookupKey, fieldValue, fieldDisabled) => {
+  const validRes = { text: '', icon: 'info', valid: true };
+
+  const invalidFactory = (text, msg) => ({
+    text,
+    icon: "error-circle-o",
+    valid: false,
+    msg
+  });
+
+  const validateValue = (condition, onInvalid) => {
+    if (condition(lookupKey.validatorRule, fieldValue)) {
+      return validRes;
+    } else {
+      return onInvalid;
+    }
+  }
+
+  if (fieldDisabled) {
+    return validRes;
+  }
+
+  if (lookupKey.required) {
+    const pleaseChange = `${__("Required parameter with invalid value.")}<br/><b>${__("Please change!")}</b><br/>`;
+
+    switch(lookupKey.validatorType) {
+      case "None":
+        return validateValue(
+          (rule, value) => value,
+          invalidFactory(
+            `${__("Required parameter without value.")}<br/><b>${__("Please override!")}</b><br/>`,
+            __("Value can't be blank")
+          )
+        )
+      case "regexp": {
+        return validateValue(
+          (rule, value) => new RegExp(rule).test(value),
+          invalidFactory(
+            pleaseChange,
+            sprintf(__("Invalid value, expected to match a regex: %s"), lookupKey.validatorRule)
+          )
+        )
+      }
+      case "list":
+        return validateValue(
+          (rule, value) => rule.split(',').find(item => item.trim() === value),
+          invalidFactory(
+            pleaseChange,
+            sprintf(__("Invalid value, expected one of: %s"), lookupKey.validatorRule)
+          )
+        )
+    }
+  }
+
+  if (fieldValue) {
+    return validRes;
+  }
+
+  return ({ text: `${__("Optional parameter without value.")}<br/><i>${__("Still managed by Foreman, the value will be empty.")}</i><br/>`,
+            icon: "warning-triangle-o",
+            valid: true });
+};
+
+const AnsibleVariablesTableRow = (props) => {
+  const { lookupKey, resourceError, role, firstKey, formObject } = props;
+
+  const [lookupValue, setLookupValue] = useState(initLookupValue(lookupKey, formObject));
   const [fieldOverriden, setFieldOverriden] = useState(resourceError ? true : lookupValue.overriden);
   const [fieldOmmited, setFieldOmmited] = useState(resourceError ? false : lookupValue.omit);
   const [fieldValue, setFieldValue] = useState(resourceError ? resourceError.value : (lookupValue.value ? lookupValue.value : lookupValue.defaultValue));
@@ -51,80 +129,12 @@ const AnsibleVariablesTableRow = (props) => {
   const toggleHidden = () => setFieldHiddenValue(!fieldHiddenValue);
 
   const updateFieldValue = value => setFieldValue(value);
-  //
 
-  const roleNameColumn = role => {
-    return (<td className="elipsis" rowSpan={role.ansibleVariables.length}>{ role.name }</td>);
-  };
+  const keyWarnings = lookupKeyWarnings(lookupKey, fieldValue, fieldDisabled);
 
-  const constructId = (role, lookupKey) => `ansible_role_${role.id}_params[${lookupKey.id}]`;
+  const formModelField = fieldElement(lowerCase(formObject.resourceName));
 
-  const overrideFieldName = (lookupKey, attr) => `host[lookup_values_attributes][${lookupKey.id}][${attr}]`;
-
-  const lookupKeyWarnings = (lookupKey, fieldValue, fieldDisabled) => {
-    const validRes = { text: '', icon: 'info', valid: true };
-
-    const invalidFactory = (text, msg) => ({
-      text,
-      icon: "error-circle-o",
-      valid: false,
-      msg
-    });
-
-    const validateValue = (condition, onInvalid) => {
-      if (condition(lookupKey.validatorRule, fieldValue)) {
-        return validRes;
-      } else {
-        return onInvalid;
-      }
-    }
-
-    if (fieldDisabled) {
-      return validRes;
-    }
-
-    if (lookupKey.required) {
-      const pleaseChange = `${__("Required parameter with invalid value.")}<br/><b>${__("Please change!")}</b><br/>`;
-
-      switch(lookupKey.validatorType) {
-        case "None":
-          return validateValue(
-            (rule, value) => value,
-            invalidFactory(
-              `${__("Required parameter without value.")}<br/><b>${__("Please override!")}</b><br/>`,
-              __("Value can't be blank")
-            )
-          )
-        case "regexp": {
-          return validateValue(
-            (rule, value) => new RegExp(rule).test(value),
-            invalidFactory(
-              pleaseChange,
-              sprintf(__("Invalid value, expected to match a regex: %s"), lookupKey.validatorRule)
-            )
-          )
-        }
-        case "list":
-          return validateValue(
-            (rule, value) => rule.split(',').find(item => item.trim() === value),
-            invalidFactory(
-              pleaseChange,
-              sprintf(__("Invalid value, expected one of: %s"), lookupKey.validatorRule)
-            )
-          )
-      }
-    }
-
-    if (fieldValue) {
-      return validRes;
-    }
-
-    return ({ text: `${__("Optional parameter without value.")}<br/><i>${__("Still managed by Foreman, the value will be empty.")}</i><br/>`,
-              icon: "warning-triangle-o",
-              valid: true });
-  }
-
-  const keyWarnings = lookupKeyWarnings(lookupKey, fieldValue, fieldDisabled)
+  const overrideFieldName = (lookupKey, attr, modelField) => `${modelField}[lookup_values_attributes][${lookupKey.id}][${attr}]`;
 
   return (
     <tr id={constructId(role, lookupKey)} className={`fields overriden`} key={lookupKey.id}>
@@ -152,23 +162,23 @@ const AnsibleVariablesTableRow = (props) => {
                checked={fieldOmmited}
                value={'1'}
                hidden={!fieldOverriden ? 'hidden' : undefined }
-               name={`host[lookup_values_attributes][${lookupKey.id}][omit]`}
+               name={overrideFieldName(lookupKey, 'omit', formModelField)}
                style={{}}/>
         <input type="hidden"
                value={'0'}
                disabled={fieldOmmited || !fieldOverriden}
-               name={`host[lookup_values_attributes][${lookupKey.id}][omit]`}/>
+               name={overrideFieldName(lookupKey, 'omit', formModelField)}/>
 
         <input type="hidden"
-               name={`host[lookup_values_attributes][${lookupKey.id}][lookup_key_id]`}
+               name={overrideFieldName(lookupKey, 'lookup_key_id', formModelField)}
                value={lookupKey.id}
                disabled={!fieldOverriden}/>
         <input type="hidden"
-               name={`host[lookup_values_attributes][${lookupKey.id}][id]`}
+               name={overrideFieldName(lookupKey, 'id', formModelField)}
                value={lookupValue.id}
                disabled={!fieldOverriden}/>
         <input type="hidden"
-               name={`host[lookup_values_attributes][${lookupKey.id}][_destroy]`}
+               name={overrideFieldName(lookupKey, '_destroy', formModelField)}
                value={false}
                disabled={!fieldOverriden}/>
       </td>

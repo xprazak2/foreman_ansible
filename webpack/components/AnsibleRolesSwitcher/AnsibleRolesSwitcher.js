@@ -19,8 +19,7 @@ class AnsibleRolesSwitcher extends React.Component {
       variablesUrl,
     } = this.props.data;
 
-    // might be needed for hostgroups
-    // this.props.initializeFormObjectAttrs({ resourceName, resourceId, variablesUrl });
+    this.props.initFormObjectAttrs({ resourceName, resourceId });
 
     this.props.getAnsibleRoles(
       availableRolesUrl,
