@@ -2,8 +2,7 @@ object @ansible_variable
 
 attributes :parameter, :id, :override, :description, :parameter_type,
            :hidden_value?, :omit, :required, :validator_type, :validator_rule,
-           :merge_overrides, :merge_default, :avoid_duplicates,
-           :override_value_order, :default_value
+           :default_value
 
 node do |ansible_variable|
  {

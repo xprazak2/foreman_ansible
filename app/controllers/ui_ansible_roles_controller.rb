@@ -10,9 +10,8 @@ class UiAnsibleRolesController < ::Api::V2::BaseController
   end
 
   def variables
-    # todo: remove pagination
     # todo: permissions
-    @ui_ansible_roles = resource_scope_for_index(:permission => :view_ansible_roles).includes(:ansible_variables)
+    @ui_ansible_roles = resource_scope(:permission => :view_ansible_roles).search_for(*search_options).includes(:ansible_variables)
     @override_resolver = ForemanAnsible::OverrideResolver.new(params[:resource_id],
                                                               params[:resource_name],
                                                               params[:parent_id],
