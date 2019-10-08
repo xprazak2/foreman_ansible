@@ -16,10 +16,11 @@ class AnsibleRolesSwitcher extends React.Component {
       inheritedRoleIds,
       resourceId,
       resourceName,
+      parentId,
       variablesUrl,
     } = this.props.data;
 
-    this.props.initFormObjectAttrs({ resourceName, resourceId });
+    this.props.initFormObjectAttrs({ resourceName, resourceId, parentId });
 
     this.props.getAnsibleRoles(
       availableRolesUrl,
@@ -35,7 +36,8 @@ class AnsibleRolesSwitcher extends React.Component {
       variablesUrl,
       rolesByIdSearch(inheritedRoleIds.concat(initialAssignedRoles.map(role => role.id))),
       resourceName,
-      resourceId
+      resourceId,
+      parentId,
     );
   }
 

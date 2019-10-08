@@ -14,6 +14,7 @@
                     :variablesUrl => variables_ui_ansible_roles_path,
                     :resourceId => f.object.id,
                     :resourceName => class_name,
+                    :parentId => f.object.parent&.id,
                     :canView => User.current.can?(:view_ansible_roles)
                   }.to_json
   ) %>

@@ -52,10 +52,17 @@ export const getAnsibleRoles = (
     .catch(error => dispatch(errorHandler(ANSIBLE_ROLES_FAILURE, error)));
 };
 
-export const getAnsibleVariables = (url, search, resourceName, resourceId) => dispatch => {
+export const getAnsibleVariables = (url, search, resourceName, resourceId, parentId) => dispatch => {
   dispatch({ type: ANSIBLE_VARIABLES_REQUEST });
 
-  const params = { ...(search || {}), ...propsToSnakeCase({ resourceName, resourceId }) };
+  if (!search.search) {
+    return dispatch({
+      type: ANSIBLE_VARIABLES_SUCCESS,
+      payload: { results: [] },
+    });
+  }
+
+  const params = { ...(search || {}), ...propsToSnakeCase({ resourceName, resourceId, parentId }) };
   return api
     .get(url, {}, params)
     .then(({ data }) =>

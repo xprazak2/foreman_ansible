@@ -2,8 +2,8 @@ module ForemanAnsible
   class OverrideResolver
     attr_reader :overrides
 
-    def initialize(resource_id, resource_name, variables)
-      @overrides = calculate_variable_overrides(resource_id, resource_name, variables)
+    def initialize(resource_id, resource_name, parent_id, variables)
+      @overrides = calculate_variable_overrides(resource_id, resource_name, parent_id, variables)
     end
 
     def resolve(ansible_variable)
@@ -14,10 +14,23 @@ module ForemanAnsible
 
     private
 
-    def calculate_variable_overrides(host_or_hg_id, resource_name, ansible_variables)
-      return {} if !host_or_hg_id || !resource_name
-      resource = resource_name.constantize.find host_or_hg_id
+    def calculate_variable_overrides(host_or_hg_id, resource_name, parent_id, ansible_variables)
+      return {} if (!host_or_hg_id && !parent_id) || !resource_name
+      resource = find_resource resource_name, host_or_hg_id, parent_id
+
       return {} unless resource
+      resolve_overrides resource, ansible_variables
+    end
+
+    def find_resource(resource_name, host_or_hg_id, parent_id)
+      if host_or_hg_id
+        resource_name.constantize.find host_or_hg_id
+      else
+        Hostgroup.find parent_id
+      end
+    end
+
+    def resolve_overrides(resource, ansible_variables)
       if resource.is_a? Host::Base
         ansible_variables.values_hash(resource).raw
       else

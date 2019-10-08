@@ -35,6 +35,7 @@ export const initialState = Immutable({
   formObject: {
     resourceName: '',
     resourceId: '',
+    parentId: '',
   },
 });
 
