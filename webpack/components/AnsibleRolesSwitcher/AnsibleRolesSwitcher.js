@@ -7,7 +7,10 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import AvailableRolesList from './components/AvailableRolesList';
 import AssignedRolesList from './components/AssignedRolesList';
 import AnsibleRolesSwitcherError from './components/AnsibleRolesSwitcherError';
-import { excludeAssignedRolesSearch } from './AnsibleRolesSwitcherHelpers';
+import {
+  excludeAssignedRolesSearch,
+  rolesByIdSearch,
+} from './AnsibleRolesSwitcherHelpers';
 
 class AnsibleRolesSwitcher extends React.Component {
   componentDidMount() {
@@ -17,7 +20,11 @@ class AnsibleRolesSwitcher extends React.Component {
       inheritedRoleIds,
       resourceId,
       resourceName,
+      parentId,
+      variablesUrl,
     } = this.props;
+
+    this.props.initFormObjectAttrs({ resourceName, resourceId, parentId });
 
     this.props.getAnsibleRoles(
       availableRolesUrl,
@@ -27,6 +34,16 @@ class AnsibleRolesSwitcher extends React.Component {
       resourceName,
       { page: 1, perPage: 10 },
       excludeAssignedRolesSearch(initialAssignedRoles)
+    );
+
+    this.props.getAnsibleVariables(
+      variablesUrl,
+      rolesByIdSearch(
+        inheritedRoleIds.concat(initialAssignedRoles.map(role => role.id))
+      ),
+      resourceName,
+      resourceId,
+      parentId
     );
   }
 
@@ -52,6 +69,7 @@ class AnsibleRolesSwitcher extends React.Component {
       inheritedRoleIds,
       resourceId,
       resourceName,
+      variablesUrl,
     } = this.props;
 
     const onListingChange = paginationArgs =>
@@ -80,6 +98,9 @@ class AnsibleRolesSwitcher extends React.Component {
               onListingChange={onListingChange}
               onAddRole={addAnsibleRole}
               loading={loading}
+              resourceName={resourceName}
+              resourceId={resourceId}
+              variablesUrl={variablesUrl}
             />
           </Col>
 
@@ -109,6 +130,8 @@ AnsibleRolesSwitcher.propTypes = {
   inheritedRoleIds: PropTypes.arrayOf(PropTypes.number),
   resourceId: PropTypes.number,
   resourceName: PropTypes.string,
+  parentId: PropTypes.number,
+  variablesUrl: PropTypes.string,
   getAnsibleRoles: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   pagination: PropTypes.shape({
@@ -131,6 +154,8 @@ AnsibleRolesSwitcher.propTypes = {
     errorMsg: PropTypes.string,
     statusText: PropTypes.string,
   }),
+  initFormObjectAttrs: PropTypes.func.isRequired,
+  getAnsibleVariables: PropTypes.func.isRequired,
 };
 
 AnsibleRolesSwitcher.defaultProps = {

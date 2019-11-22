@@ -1,4 +1,6 @@
-import { differenceBy, slice, includes, uniq } from 'lodash';
+import { differenceBy, slice, includes, uniq, uniqBy } from 'lodash';
+import { deepPropsToCamelCase } from 'foremanReact/common/helpers';
+
 import Immutable from 'seamless-immutable';
 import { createSelector } from 'reselect';
 
@@ -66,3 +68,17 @@ export const selectAssignedRolesPage = createSelector(
     return slice(assignedRoles, offset, offset + assignedPagination.perPage);
   }
 );
+
+export const selectAssignedVariables = state =>
+  deepPropsToCamelCase(
+    Immutable(
+      Immutable.asMutable(
+        uniqBy(switcherState(state).assignedVariables, 'id')
+      ).sort(compare)
+    )
+  );
+
+export const selectVariablesLoading = state =>
+  switcherState(state).loadingVariables;
+
+export const selectFormObject = state => switcherState(state).formObject;

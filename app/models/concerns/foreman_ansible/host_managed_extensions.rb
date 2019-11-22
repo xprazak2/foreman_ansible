@@ -17,6 +17,10 @@ module ForemanAnsible
 
         before_provision :play_ansible_roles
         audit_associations :ansible_roles
+
+        # rubocop:disable Style/Alias
+        alias_method :parent, :hostgroup
+        # rubocop:enable Style/Alias
       end
 
       base.singleton_class.prepend ClassMethods

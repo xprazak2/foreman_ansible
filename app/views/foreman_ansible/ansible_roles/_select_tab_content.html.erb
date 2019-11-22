@@ -6,10 +6,13 @@
   <% class_name = f.object.is_a?(Hostgroup) ? 'Hostgroup' : 'Host' %>
   <%= react_component('AnsibleRolesSwitcher', {
                                                 :initialAssignedRoles => roles,
+                                                :initialAssignedVariables => [],
                                                 :inheritedRoleIds => f.object.inherited_ansible_roles.map(&:id),
                                                 :availableRolesUrl => ui_ansible_roles_path,
+                                                :variablesUrl => overrides_ansible_variables_path,
                                                 :resourceId => f.object.id,
                                                 :resourceName => class_name,
+                                                :parentId => f.object.parent&.id,
                                                 :canView => User.current.can?(:view_ansible_roles)
                                               }) %>
 </div>

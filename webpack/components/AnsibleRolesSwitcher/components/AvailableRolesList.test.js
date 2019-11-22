@@ -15,6 +15,9 @@ const fixtures = {
     onListingChange: noop,
     onAddRole: noop,
     loading: false,
+    resourceName: 'Host',
+    resourceId: 14,
+    variablesUrl: '/hosts/14/variables',
   },
 };
 
