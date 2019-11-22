@@ -1,4 +1,6 @@
 import { differenceBy, slice, includes, uniq } from 'lodash';
+import { deepPropsToCamelCase } from 'foremanReact/common/helpers';
+
 import Immutable from 'seamless-immutable';
 import { createSelector } from 'reselect';
 
@@ -66,3 +68,10 @@ export const selectAssignedRolesPage = createSelector(
     return slice(assignedRoles, offset, offset + assignedPagination.perPage);
   }
 );
+
+export const selectAssignedVariables = state =>
+  deepPropsToCamelCase(switcherState(state).assignedVariables);
+export const selectVariablesLoading = state =>
+  switcherState(state).loadingVariables;
+
+export const selectFormObject = state => switcherState(state).formObject;

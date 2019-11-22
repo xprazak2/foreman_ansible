@@ -25,13 +25,21 @@ Object {
       "name": "chef.chef",
     },
   ],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": 15,
+    "resourceId": 5,
+    "resourceName": "Host",
   },
   "itemCount": 10,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 5,
@@ -82,6 +90,12 @@ Object {
       "name": "anonymous.something",
     },
   ],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -106,13 +120,21 @@ Object {
       "name": "theforeman.foreman_scap_client",
     },
   ],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": 15,
+    "resourceId": 5,
+    "resourceName": "Host",
   },
   "itemCount": 11,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 5,
@@ -163,6 +185,12 @@ Object {
       "name": "anonymous.something",
     },
   ],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -183,13 +211,21 @@ Object {
       "name": "naftulikay.golang",
     },
   ],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": 15,
+    "resourceId": 5,
+    "resourceName": "Host",
   },
   "itemCount": 12,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 5,
@@ -244,6 +280,60 @@ Object {
       "name": "theforeman.foreman_scap_client",
     },
   ],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+}
+`;
+
+exports[`AnsibleRolesSwitcherReducer should remove ansible variable 1`] = `
+Object {
+  "assignedPagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "assignedRoles": Array [],
+  "assignedVariables": Array [
+    Object {
+      "ansibleVariables": Array [
+        Object {
+          "id": 15,
+          "parameter": "motd",
+        },
+      ],
+      "id": 1,
+      "name": "sthirugn.motd",
+    },
+  ],
+  "error": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
+  },
+  "inheritedRoleIds": Array [],
+  "itemCount": 0,
+  "loading": false,
+  "loadingVariables": false,
+  "pagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -254,19 +344,128 @@ Object {
     "perPage": 10,
   },
   "assignedRoles": Array [],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
   },
   "inheritedRoleIds": Array [],
   "itemCount": 0,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 10,
   },
   "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+}
+`;
+
+exports[`AnsibleRolesSwitcherReducer should set form object 1`] = `
+Object {
+  "assignedPagination": Object {
+    "page": 1,
+    "perPage": 20,
+  },
+  "assignedRoles": Array [
+    Object {
+      "id": 4,
+      "inherited": true,
+      "name": "geerlingguy.java",
+    },
+    Object {
+      "id": 5,
+      "name": "naftulikay.golang",
+    },
+    Object {
+      "id": 6,
+      "name": "theforeman.foreman_scap_client",
+    },
+  ],
+  "assignedVariables": Array [],
+  "error": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": 6,
+    "resourceId": 7,
+    "resourceName": "Hostgroup",
+  },
+  "itemCount": 11,
+  "loading": false,
+  "loadingVariables": false,
+  "pagination": Object {
+    "page": 1,
+    "perPage": 5,
+  },
+  "results": Array [
+    Object {
+      "id": 1,
+      "name": "sthirugn.motd",
+    },
+    Object {
+      "id": 2,
+      "name": "jtyr.ntp",
+    },
+    Object {
+      "id": 3,
+      "name": "rvm.ruby",
+    },
+    Object {
+      "id": 4,
+      "name": "geerlingguy.java",
+    },
+    Object {
+      "id": 5,
+      "name": "naftulikay.golang",
+    },
+    Object {
+      "id": 6,
+      "name": "theforeman.foreman_scap_client",
+    },
+    Object {
+      "id": 7,
+      "name": "ansible.ansible",
+    },
+    Object {
+      "id": 8,
+      "name": "puppet.puppet",
+    },
+    Object {
+      "id": 9,
+      "name": "chef.chef",
+    },
+    Object {
+      "id": 10,
+      "name": "salt.salt",
+    },
+    Object {
+      "id": 11,
+      "name": "anonymous.something",
+    },
+  ],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -277,19 +476,70 @@ Object {
     "perPage": 10,
   },
   "assignedRoles": Array [],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
   },
   "inheritedRoleIds": Array [],
   "itemCount": 0,
   "loading": true,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 10,
   },
   "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+}
+`;
+
+exports[`AnsibleRolesSwitcherReducer should start loading variables 1`] = `
+Object {
+  "assignedPagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "assignedRoles": Array [],
+  "assignedVariables": Array [],
+  "error": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
+  },
+  "inheritedRoleIds": Array [],
+  "itemCount": 0,
+  "loading": false,
+  "loadingVariables": true,
+  "pagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -300,18 +550,31 @@ Object {
     "perPage": 10,
   },
   "assignedRoles": Array [],
+  "assignedVariables": Array [],
   "error": Object {
     "errorMsg": "Failed to fetch Ansible Roles from server.",
     "statusText": "500",
   },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
+  },
   "inheritedRoleIds": Array [],
   "itemCount": 0,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 10,
   },
   "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
 
@@ -335,16 +598,24 @@ Object {
       "name": "theforeman.foreman_scap_client",
     },
   ],
+  "assignedVariables": Array [],
   "error": Object {
+    "error": Object {},
     "errorMsg": "",
-    "status": "",
+    "status": null,
     "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
   },
   "inheritedRoleIds": Array [
     4,
   ],
   "itemCount": 11,
   "loading": false,
+  "loadingVariables": false,
   "pagination": Object {
     "page": 1,
     "perPage": 5,
@@ -395,5 +666,112 @@ Object {
       "name": "anonymous.something",
     },
   ],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+}
+`;
+
+exports[`AnsibleRolesSwitcherReducer should stop loading on variables error 1`] = `
+Object {
+  "assignedPagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "assignedRoles": Array [],
+  "assignedVariables": Array [],
+  "error": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
+  },
+  "inheritedRoleIds": Array [],
+  "itemCount": 0,
+  "loading": false,
+  "loadingVariables": false,
+  "pagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "results": Array [],
+  "variablesError": Object {
+    "error": Object {
+      "description": "You seem to be missing one of the following permissions: ",
+      "message": "Access Denied",
+      "missingPermissions": Array [
+        "view_ansible_variables",
+      ],
+    },
+    "errorMsg": "Failed to fetch Ansible Roles from server.",
+    "status": 403,
+    "statusText": "Forbidden",
+  },
+}
+`;
+
+exports[`AnsibleRolesSwitcherReducer should stop loading variables on success 1`] = `
+Object {
+  "assignedPagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "assignedRoles": Array [],
+  "assignedVariables": Array [
+    Object {
+      "ansibleVariables": Array [
+        Object {
+          "id": 15,
+          "parameter": "motd",
+        },
+      ],
+      "id": 1,
+      "name": "sthirugn.motd",
+    },
+    Object {
+      "ansibleVariables": Array [
+        Object {
+          "id": 16,
+          "parameter": "whatever",
+        },
+      ],
+      "id": 2,
+      "name": "jtyr.ntp",
+    },
+  ],
+  "error": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
+  "formObject": Object {
+    "parentId": "",
+    "resourceId": "",
+    "resourceName": "",
+  },
+  "inheritedRoleIds": Array [],
+  "itemCount": 0,
+  "loading": false,
+  "loadingVariables": false,
+  "pagination": Object {
+    "page": 1,
+    "perPage": 10,
+  },
+  "results": Array [],
+  "variablesError": Object {
+    "error": Object {},
+    "errorMsg": "",
+    "status": null,
+    "statusText": "",
+  },
 }
 `;
