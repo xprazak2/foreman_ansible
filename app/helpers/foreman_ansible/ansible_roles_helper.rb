@@ -48,7 +48,7 @@ module ForemanAnsible
     end
 
     def model_roles_attrs(form_object, assoc_class, foreign_key, assoc_key)
-      inherited_attrs = roles_attrs form_object.inherited_ansible_roles_ordered
+      inherited_attrs = roles_attrs form_object.inherited_ansible_roles
 
       own_attrs = assoc_class.includes(:ansible_role).
                   where(foreign_key => form_object.id).

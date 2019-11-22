@@ -47,6 +47,7 @@ const AssignedRolesList = ({
             type="hidden"
             name={`${resourceName}[ansible_role_ids][]`}
             value=""
+            className="ansible-role-id-input"
           />
         ) : (
           directlyAssignedRoles.map(role => (
@@ -55,6 +56,7 @@ const AssignedRolesList = ({
               type="hidden"
               name={`${resourceName}[ansible_role_ids][]`}
               value={role.id}
+              className="ansible-role-id-input"
             />
           ))
         )}

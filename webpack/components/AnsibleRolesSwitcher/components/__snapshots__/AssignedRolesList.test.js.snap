@@ -48,12 +48,14 @@ exports[`AssignedRolesList should render 1`] = `
   </ListView>
   <div>
     <input
+      className="ansible-role-id-input"
       key="1"
       name="host[ansible_role_ids][]"
       type="hidden"
       value={1}
     />
     <input
+      className="ansible-role-id-input"
       key="2"
       name="host[ansible_role_ids][]"
       type="hidden"
