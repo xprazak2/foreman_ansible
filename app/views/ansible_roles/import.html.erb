@@ -1,4 +1,7 @@
 <% title _("Changed Ansible roles") %>
+<%= react_component('ImportRolesAndVariablesTable') %>
+
+
 <%= form_tag confirm_import_ansible_roles_path do %>
   <h4><%= _("Select the changes you want to realize in Foreman") %></h4>
   <h6>
@@ -44,6 +47,7 @@
       <% end %>
     </tbody>
   </table>
+
   <div>
     <%= link_to _("Cancel"), ansible_roles_path, :class => "btn btn-default" %>
     <%= submit_tag _("Update"), :class => "btn btn-primary" %>
