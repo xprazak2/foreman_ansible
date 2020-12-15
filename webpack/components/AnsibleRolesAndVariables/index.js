@@ -149,4 +149,8 @@ class ImportRolesAndVariablesTable extends React.Component {
     );
     }
 }
-export default ImportRolesAndVariablesTable;
+
+const Foo = props => <div>Hello, I am Roles and Variables!</div>
+// export default ImportRolesAndVariablesTable;
+
+export default Foo;
