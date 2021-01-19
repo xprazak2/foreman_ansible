@@ -7,6 +7,7 @@ module ForemanAnsible
 
     def initialize(proxy = nil)
       @ansible_proxy = proxy
+      @variables_importer = ForemanAnsible::VariablesImporter.new(@ansible_proxy)
     end
 
     def import_role_names
@@ -26,9 +27,13 @@ module ForemanAnsible
 
     def detect_changes(imported)
       changes = {}.with_indifferent_access
-      old, changes[:new] = imported.partition { |role| role.id.present? }
-      changes[:obsolete] = ::AnsibleRole.where.not(:id => old.map(&:id))
+      changes[:old], changes[:new] = imported.partition { |role| role.id.present? }
+      changes[:obsolete] = ::AnsibleRole.where.not(:id => changes[:old].map(&:id))
       changes
+    end
+
+    def get_variables_names(role)
+      proxy_api.variables(role)
     end
 
     private
