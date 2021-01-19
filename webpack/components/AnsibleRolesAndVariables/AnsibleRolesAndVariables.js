@@ -34,6 +34,7 @@ const ImportRolesAndVariablesTable = ({
   columnsData,
   rowsData,
   proxy,
+  onSubmit
 }) => {
   const columns = columnsData.map(col => ({
     ...col,
@@ -49,7 +50,7 @@ const ImportRolesAndVariablesTable = ({
   const [perPage, setPerPage]= useState(DEFAULT_PER_PAGE);
   const [paginatedRows, setPaginatedRows]= useState(rows.slice(0, perPage));
 
-  debugger;
+  // debugger;
 
   const onSelect = (event, isSelected,rowId, row) => {
     const selectableRowLength = rows.filter(row => row.parent === undefined).length;
@@ -76,18 +77,6 @@ const ImportRolesAndVariablesTable = ({
 
   const SelectAll = (checked) => {
     onSelect(null, checked, -1);
-  };
-
-  const onSubmit = () => {
-    const params = prepareResult(rows);
-    dispatch(
-      post({
-        key: 'import_ansible_v_r',
-        url: ANSIBLE_ROLE_CONFIRM_IMPORT_PATH,
-        params: { changed: params, proxy },
-        handleSuccess: () => dispatch(push(ANSIBLE_ROLES_INDEX)),
-      })
-    );
   };
 
   const onCancel = () => {
@@ -180,7 +169,7 @@ const ImportRolesAndVariablesTable = ({
         <div>
           <br />
           <br />
-          <Button variant="primary" onClick={onSubmit}> Submit </Button>
+          <Button variant="primary" onClick={() => onSubmit(rows, proxy)}> Submit </Button>
           <Button variant="secondary" onClick={onCancel}> Cancel </Button>
         </div>
       );
