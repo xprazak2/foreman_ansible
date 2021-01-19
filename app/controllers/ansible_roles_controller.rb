@@ -32,9 +32,10 @@ class AnsibleRolesController < ::ApplicationController
 
   def confirm_import
     @importer.finish_import(params[:changed]&.to_unsafe_h)
-    success _('Import of roles successfully finished.')
-    redirect_to ansible_roles_path
+    @variables_importer.import_variables_roles(params[:changed]) if params[:changed]["new"] or params[:changed]["old"]
+    success _('Import of roles and their variables was successfully finished.')
   end
+
 
   private
 
@@ -44,6 +45,7 @@ class AnsibleRolesController < ::ApplicationController
 
   def create_importer
     @importer = ForemanAnsible::UiRolesImporter.new(@proxy)
+    @variables_importer = ForemanAnsible::VariablesImporter.new(@proxy)
   end
 
   def no_changed_roles_message

@@ -37,6 +37,37 @@ module ForemanAnsible
       )
     end
 
+    def import_variables_roles(roles)
+      if roles["new"]
+        imported_roles = roles["new"].keys
+        variables_to_import = {}
+        remote_variables.each do  |role, variables|
+          if imported_roles.include? role
+            role_obj = AnsibleRole.find_by(:name => role)
+            variables_to_import[role] = {}
+            values = initialize_variables(variables, role_obj)
+            values.each do |value|
+              variables_to_import[role][value.key] = value.attributes.to_json
+            end
+          end
+        end
+        create_new_variables(variables_to_import)
+      end
+      unless roles["old"].empty?
+        variables_to_update = { "new" => {}, "obsolete" => {}, "update" => {} }
+        import_variable_names([]).each do | kind, variables |
+          variables.each do |variable|
+            if roles["old"].values.map {|role| role["id"]}.include?(variable.ansible_role_id)
+              role = AnsibleRole.where(:id => variable.ansible_role_id)[0]
+              variables_to_update[kind][role.name] = { variable.key => variable.attributes.to_json}
+            end
+          end
+        end
+        finish_import(variables_to_update["new"],variables_to_update["obsolete"], variables_to_update["update"] )
+      end
+
+    end
+
     def import_new_role(role_name, new_roles)
       role = AnsibleRole.find_by(:name => role_name)
       if role.blank? && new_roles.map(&:name).include?(role_name)

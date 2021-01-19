@@ -1,51 +1,53 @@
 <% title _("Changed Ansible roles") %>
-<%= form_tag confirm_import_ansible_roles_path do %>
-  <h4><%= _("Select the changes you want to realize in Foreman") %></h4>
-  <h6>
-  <%= _("Toggle") %>:
-  <%= link_to_function(icon_text("check", _("New")),
-                       "toggleCheckboxesBySelector('.role_select_boxes_new')",
-                       :title => _("Check/Uncheck new")) %> |
-  <%= link_to_function(icon_text("check", _("Obsolete")),
-                       "toggleCheckboxesBySelector('.role_select_boxes_obsolete')",
-                       :title => _("Check/Uncheck obsolete")) %>
-  </h6>
-  <table class="<%= table_css_classes %>">
-    <thead>
-      <tr>
-        <th class="ca">
-          <%= link_to_function(icon_text("check"),
-                               "toggleCheckboxesBySelector('.role_select_boxes')",
-                               :title => _("Check/Uncheck all")) %>
-        </th>
-        <th><%= _("Name") %></th>
-        <th class="col-md-2"><%= _("Hosts count") %></th>
-        <th class="col-md-2"><%= _("Hostgroups count") %></th>
-        <th><%= _("Operation") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% changed.each do |kind, roles| %>
-        <% roles.each do |role| %>
-          <tr>
-            <td>
-              <%= check_box_tag "changed[#{kind}][#{role}]", role.to_json, false, :class => "role_select_boxes role_select_boxes_#{kind} role_select_boxes_role_#{role}" %>
-            </td>
-            <td>
-              <%= link_to_function("#{role}", "toggleCheckboxesBySelector('.role_select_boxes_role_#{role}')", :title => _("Check/Uncheck all %s changes") % role) %>
-            </td>
-            <td><%= role.hosts.count %></td>
-            <td><%= role.hostgroups.count %></td>
-            <td>
-              <%= { "new" => _("Add"), "obsolete" => _("Remove") }[kind] %>
-            </td>
-          </tr>
+<%= webpacked_plugins_js_for :foreman_ansible %>
+
+<% my_rows = [] %>
+<% changed.each do |kind, roles| %>
+  <% roles.each do |role| %>
+
+    <% action =  { "new" => _("Import Role "), "obsolete" => _("Remove Role"), "old" => _("Update Role Variables")}[kind] %>
+    <% if kind == "new" %>
+      <% variables = {"Add" => @importer.get_variables_names(role)[role.name]} %>
+    <% elsif  kind =="obsolete" %>
+      <% variables= {"Remove" => role.ansible_variables.map {|variable| variable.key}} %>
+    <% elsif kind == "old" %>
+      <% variables = {"Add" => [],"Remove" => [],"Update" =>[]} %>
+      <%  imported_variables = @variables_importer.import_variable_names(roles)%>
+      <% imported_variables.each do |kind,temp_variables| %>
+        <% variable_action =  { "new" => _("Add"), "obsolete" => _("Remove"), "update" => _("Update")}[kind] %>
+        <% temp_variables.each do |temp_variable| %>
+          <%  if temp_variable.ansible_role_id == role.id%>
+            <% variables[variable_action].append(temp_variable.key) %>
+          <% end %>
         <% end %>
       <% end %>
-    </tbody>
-  </table>
-  <div>
-    <%= link_to _("Cancel"), ansible_roles_path, :class => "btn btn-default" %>
-    <%= submit_tag _("Update"), :class => "btn btn-primary" %>
-  </div>
+    <% end %>
+    <% string_variables ="" %>
+    <% variables.each do |action, temp_variables| %>
+      <% unless temp_variables.empty? %>
+        <% string_variables += "#{action}: #{temp_variables.size()} " %>
+      <% end %>
+    <% end %>
+    <% unless string_variables.empty? %>
+      <% my_rows.append({
+                            cells: [role.name,action, string_variables, action == "Remove Role" ? role.hosts.count: "", action == "Remove Role" ? role.hostgroups.count: "", ],
+                            role: role, kind: kind, id:role.name})
+      %>
+    <% end %>
+  <% end %>
 <% end %>
+<% cols =  [
+    {title: 'Name'},
+    {title:'Operation'},
+    {title:'Variables'},
+    {title:'Hosts Count'},
+    {title:'Hostgroups count'},
+] %>
+
+<%= react_component(
+        'ImportRolesAndVariablesTable',
+        :rowsData => my_rows,
+        :columnsData => cols,
+        :proxy => @proxy.id
+    ) %>
+
