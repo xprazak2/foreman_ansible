@@ -10,12 +10,7 @@ module ForemanAnsible
         include ::ForemanAnsible::Concerns::JobInvocationHelper
         include ::ForemanAnsible::Concerns::ApiCommon
 
-        # Included blocks shouldn't be bound by length, as otherwise concerns
-        # cannot extend the method properly.
-        # rubocop:disable Rails/LexicallyScopedActionFilter
         included do
-          before_action :find_ansible_roles, :only => [:assign_ansible_roles]
-
           def find_resource
             return true if params[:action] == 'multiple_play_roles'
 
@@ -60,10 +55,9 @@ module ForemanAnsible
                 :required => true
 
           def assign_ansible_roles
-            process_response @host.update(:ansible_roles => @ansible_roles)
+            process_response update_associations
           end
         end
-        # rubocop:enable Rails/LexicallyScopedActionFilter
 
         private
 

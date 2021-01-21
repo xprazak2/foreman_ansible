@@ -14,8 +14,6 @@ module ForemanAnsible
         # cannot extend the method properly.
         # rubocop:disable Rails/LexicallyScopedActionFilter
         included do
-          before_action :find_ansible_roles, :only => [:assign_ansible_roles]
-
           api :POST, '/hostgroups/:id/play_roles',
               N_('Runs all Ansible roles on a hostgroup')
           param :id, :identifier, :required => true
@@ -58,7 +56,7 @@ module ForemanAnsible
 
           def assign_ansible_roles
             find_resource
-            process_response @hostgroup.update(:ansible_roles => @ansible_roles)
+            process_response update_associations
           end
         end
         # rubocop:enable Rails/LexicallyScopedActionFilter

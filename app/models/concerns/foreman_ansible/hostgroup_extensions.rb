@@ -9,18 +9,28 @@ module ForemanAnsible
       has_many :hostgroup_ansible_roles, :foreign_key => :hostgroup_id
       has_many :ansible_roles, :through => :hostgroup_ansible_roles,
                                :dependent => :destroy
+      accepts_nested_attributes_for :hostgroup_ansible_roles, :allow_destroy => true
+
       audit_associations :ansible_roles
 
       def inherited_ansible_roles
-        ancestors.reduce([]) do |roles, hostgroup|
-          roles + hostgroup.ansible_roles
-        end.uniq
+        iterate_inherited(&:ansible_roles)
       end
 
       def inherited_and_own_ansible_roles
-        path.reduce([]) do |roles, hostgroup|
-          roles + hostgroup.ansible_roles
-        end.uniq
+        iterate_inherited_and_own(&:ansible_roles)
+      end
+
+      def inherited_ansible_roles_ordered
+        iterate_inherited(&:ansible_roles_ordered)
+      end
+
+      def inherited_and_own_ansible_roles_ordered
+        iterate_inherited_and_own(&:ansible_roles_ordered)
+      end
+
+      def ansible_roles_ordered
+        ansible_roles.order('hostgroup_ansible_roles.position')
       end
 
       def host_ansible_roles
@@ -32,6 +42,18 @@ module ForemanAnsible
       # either directly or through hostgroup
       def all_ansible_roles
         (ansible_roles + inherited_ansible_roles + host_ansible_roles).uniq
+      end
+
+      def iterate_inherited(&block)
+        ancestors.reduce([]) do |roles, hostgroup|
+          roles + (yield hostgroup)
+        end.uniq
+      end
+
+      def iterate_inherited_and_own(&block)
+        path.reduce([]) do |roles, hostgroup|
+          roles + (yield hostgroup)
+        end.uniq
       end
     end
   end

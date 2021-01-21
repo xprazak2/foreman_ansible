@@ -50,17 +50,17 @@ module Api
         assert_equal @ansible_role1.id, response.first['id']
       end
 
-      test 'should assign a role to a hostgroup' do
+      test 'should assign a role to a hostgroup with a correct ordering' do
         hostgroup = FactoryBot.create(:hostgroup,
                                       :ansible_role_ids => [])
         post :assign_ansible_roles,
              :params => {
                :id => hostgroup.id,
-               :ansible_role_ids => [@ansible_role1.id]
+               :ansible_role_ids => [@ansible_role_2.id, @ansible_role1.id]
              },
              :session => set_session_user
         assert_response :success
-        assert assigns('hostgroup').ansible_roles, [@ansible_role1]
+        assert_equal assigns('hostgroup').ansible_roles_ordered, [@ansible_role2, @ansible_role1]
       end
     end
   end
