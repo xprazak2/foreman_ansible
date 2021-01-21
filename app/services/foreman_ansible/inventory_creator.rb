@@ -59,7 +59,7 @@ module ForemanAnsible
     end
 
     def host_roles(host)
-      host.all_ansible_roles.map(&:name)
+      host.all_ansible_roles_ordered.map(&:name)
     end
 
     def ansible_params(host)

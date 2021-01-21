@@ -9,6 +9,7 @@ module ForemanAnsible
         include ::ForemanAnsible::Concerns::JobInvocationHelper
 
         has_many :host_ansible_roles, :foreign_key => :host_id
+        accepts_nested_attributes_for :host_ansible_roles, :allow_destroy => true
         has_many :ansible_roles, :through => :host_ansible_roles,
                                  :dependent => :destroy
         scoped_search :relation => :ansible_roles, :on => :name,
@@ -25,6 +26,11 @@ module ForemanAnsible
     def inherited_ansible_roles
       return [] unless hostgroup
       hostgroup.inherited_and_own_ansible_roles
+    end
+
+    def inherited_ansible_roles_ordered
+      return [] unless hostgroup
+      hostgroup.inherited_and_own_ansible_roles_ordered
     end
 
     # This one should be fixed, disabled for the moment as we're
@@ -48,6 +54,14 @@ module ForemanAnsible
 
     def all_ansible_roles
       (ansible_roles + inherited_ansible_roles).uniq
+    end
+
+    def all_ansible_roles_ordered
+      (inherited_ansible_roles_ordered + ansible_roles_ordered).uniq
+    end
+
+    def ansible_roles_ordered
+      ansible_roles.order('host_ansible_roles.position')
     end
 
     # Class methods we may need to override or add

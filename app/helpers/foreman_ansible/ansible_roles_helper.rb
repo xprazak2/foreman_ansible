@@ -38,5 +38,18 @@ module ForemanAnsible
     def roles_attrs(roles)
       roles.map { |item| { :id => item.id, :name => item.name } }
     end
+
+    def model_roles_attrs(form_object, assoc_class, foreign_key, assoc_key)
+      inherited_attrs = roles_attrs form_object.inherited_ansible_roles_ordered
+
+      own_attrs = assoc_class.includes(:ansible_role).
+                  where(foreign_key => form_object.id).
+                  where.not(:ansible_roles => { :id => form_object.inherited_ansible_roles.pluck(:id) }).
+                  order(:position).
+                  map do |join_record|
+        { :id => join_record.ansible_role_id, assoc_key => join_record.id, :name => join_record.ansible_role.name, :position => join_record.position }
+      end
+      inherited_attrs + own_attrs
+    end
   end
 end
