@@ -10,7 +10,16 @@ module ForemanAnsible
         include ::ForemanAnsible::Concerns::JobInvocationHelper
         include ::ForemanAnsible::Concerns::ApiCommon
 
+        module Overrides
+          def host_attributes(params, host = nil)
+            params = params.merge(:host_ansible_roles_attributes => find_ansible_roles_attributes(params, HostAnsibleRole, :host_id, host))
+            super params, host
+          end
+        end
+
         included do
+          prepend Overrides
+
           def find_resource
             return true if params[:action] == 'multiple_play_roles'
 
