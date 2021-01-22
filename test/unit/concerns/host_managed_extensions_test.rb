@@ -50,11 +50,11 @@ class HostManagedExtensionsTest < ActiveSupport::TestCase
   end
 
   test 'should correctly order roles for host' do
-      host = FactoryBot.create(:host)
-      FactoryBot.create(:host_ansible_role, :ansible_role_id => @role1.id, :position => 1, :host_id => host.id)
-      FactoryBot.create(:host_ansible_role, :ansible_role_id => @role2.id, :position => 2, :host_id => host.id)
-      FactoryBot.create(:host_ansible_role, :ansible_role_id => @role3.id, :position => 0, :host_id => host.id)
-      host.ansible_roles_ordered.must_equal [@role3, @role1, @role2]
+    host = FactoryBot.create(:host)
+    FactoryBot.create(:host_ansible_role, :ansible_role_id => @role1.id, :position => 1, :host_id => host.id)
+    FactoryBot.create(:host_ansible_role, :ansible_role_id => @role2.id, :position => 2, :host_id => host.id)
+    FactoryBot.create(:host_ansible_role, :ansible_role_id => @role3.id, :position => 0, :host_id => host.id)
+    host.ansible_roles_ordered.must_equal [@role3, @role1, @role2]
   end
 
   test 'should order hostgroup roles before host roles' do

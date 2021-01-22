@@ -31,7 +31,6 @@ module ForemanAnsible
 
         instance.send("#{join_model.table_name}=", join_records)
         instance.save
-
       rescue ActiveRecord::RecordNotFound => e
         not_found(e.message)
       end

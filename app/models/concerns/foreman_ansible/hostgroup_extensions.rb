@@ -44,13 +44,13 @@ module ForemanAnsible
         (ansible_roles + inherited_ansible_roles + host_ansible_roles).uniq
       end
 
-      def iterate_inherited(&block)
+      def iterate_inherited
         ancestors.reduce([]) do |roles, hostgroup|
           roles + (yield hostgroup)
         end.uniq
       end
 
-      def iterate_inherited_and_own(&block)
+      def iterate_inherited_and_own
         path.reduce([]) do |roles, hostgroup|
           roles + (yield hostgroup)
         end.uniq

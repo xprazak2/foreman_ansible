@@ -10,7 +10,7 @@ class AddPositionToAnsibleRole < ActiveRecord::Migration[6.0]
   end
 
   def update_host_ansible_roles
-    hosts = Host.unscoped.where(:id => HostAnsibleRole.pluck(:host_id).uniq)
+    hosts = Host.unscoped.where(:id => HostAnsibleRole.distinct.pluck(:host_id).uniq)
     hosts.each do |host|
       host.host_ansible_roles.each_with_index do |har, idx|
         har.position = idx
@@ -20,7 +20,7 @@ class AddPositionToAnsibleRole < ActiveRecord::Migration[6.0]
   end
 
   def update_hostgroup_ansible_roles
-    hostgroups = Hostgroup.unscoped.where(:id => HostgroupAnsibleRole.pluck(:hostgroup_id).uniq)
+    hostgroups = Hostgroup.unscoped.where(:id => HostgroupAnsibleRole.distinct.pluck(:hostgroup_id).uniq)
     hostgroups.each do |hg|
       hg.hostgroup_ansible_roles.each_with_index do |har, idx|
         har.position = idx

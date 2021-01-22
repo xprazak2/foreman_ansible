@@ -12,7 +12,6 @@ module ForemanAnsible
 
         # Included blocks shouldn't be bound by length, as otherwise concerns
         # cannot extend the method properly.
-        # rubocop:disable Rails/LexicallyScopedActionFilter
         included do
           api :POST, '/hostgroups/:id/play_roles',
               N_('Runs all Ansible roles on a hostgroup')
@@ -59,7 +58,6 @@ module ForemanAnsible
             process_response update_associations
           end
         end
-        # rubocop:enable Rails/LexicallyScopedActionFilter
 
         private
 
