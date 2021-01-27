@@ -17,6 +17,7 @@ import {
 
 import PropTypes from 'prop-types';
 import { DEFAULT_PER_PAGE } from './AnsibleRolesAndVariablesConstants';
+import './AnsibleRolesAndVariables.scss';
 
 const ImportRolesAndVariablesTable = ({
   columnsData,
@@ -127,13 +128,10 @@ const ImportRolesAndVariablesTable = ({
   );
 
   const renderSubmitAndCancel = () => (
-    <div>
-      <br />
-      <br />
+    <div className="submit-cancel-btns">
       <Button variant="primary" onClick={() => onSubmit(rows, proxy)}>
         Submit
       </Button>
-      &nbsp;
       <Button variant="secondary" onClick={onCancel}>
         Cancel
       </Button>
@@ -141,7 +139,7 @@ const ImportRolesAndVariablesTable = ({
   );
 
   return (
-    <React.Fragment>
+    <div id="import-ansible-roles-variables">
       {renderSelectAll()}
       <Table
         aria-label="import roles and variables"
@@ -155,7 +153,7 @@ const ImportRolesAndVariablesTable = ({
       </Table>
       {renderPagination()}
       {renderSubmitAndCancel()}
-    </React.Fragment>
+    </div>
   );
 };
 
