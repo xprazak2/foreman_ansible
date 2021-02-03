@@ -6,7 +6,6 @@ import {
   ANSIBLE_ROLES_FAILURE,
   ANSIBLE_ROLES_ADD,
   ANSIBLE_ROLES_REMOVE,
-  ANSIBLE_ROLES_MOVE,
   ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE,
 } from './AnsibleRolesSwitcherConstants';
 
@@ -60,8 +59,6 @@ const ansibleRoles = (state = initialState, action) => {
         results: state.results.concat([payload.role]),
         itemCount: state.itemCount + 1,
       });
-    case ANSIBLE_ROLES_MOVE:
-      return state.set('assignedRoles', payload.roles);
     case ANSIBLE_ROLES_ASSIGNED_PAGE_CHANGE:
       return state.set('assignedPagination', payload.pagination);
     default:
