@@ -37,6 +37,7 @@ class AnsibleRolesSwitcher extends React.Component {
       itemCount,
       addAnsibleRole,
       removeAnsibleRole,
+      moveAnsibleRole,
       getAnsibleRoles,
       changeAssignedPage,
       assignedPagination,
@@ -89,11 +90,13 @@ class AnsibleRolesSwitcher extends React.Component {
             </div>
             <AssignedRolesList
               assignedRoles={assignedRoles}
+              unassignedRoles={unassignedRoles}
               allAssignedRoles={allAssignedRoles}
               pagination={assignedPagination}
               itemCount={assignedRolesCount}
               onPaginationChange={changeAssignedPage}
               onRemoveRole={removeAnsibleRole}
+              onMoveRole={moveAnsibleRole}
               resourceName={lowerCase(resourceName || '')}
             />
           </Col>
@@ -118,6 +121,7 @@ AnsibleRolesSwitcher.propTypes = {
   itemCount: PropTypes.number.isRequired,
   addAnsibleRole: PropTypes.func.isRequired,
   removeAnsibleRole: PropTypes.func.isRequired,
+  moveAnsibleRole: PropTypes.func.isRequired,
   changeAssignedPage: PropTypes.func.isRequired,
   assignedPagination: PropTypes.shape({
     page: PropTypes.number,

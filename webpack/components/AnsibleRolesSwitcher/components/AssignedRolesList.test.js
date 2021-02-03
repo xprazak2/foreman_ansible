@@ -18,7 +18,9 @@ const fixtures = {
     itemCount: 2,
     onPaginationChange: noop,
     onRemoveRole: noop,
+    onMoveRole: noop,
     resourceName: 'host',
+    unassignedRoles: [],
   },
 };
 
