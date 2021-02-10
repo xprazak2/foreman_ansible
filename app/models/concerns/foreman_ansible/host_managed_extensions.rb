@@ -9,7 +9,6 @@ module ForemanAnsible
         include ::ForemanAnsible::Concerns::JobInvocationHelper
 
         has_many :host_ansible_roles, :foreign_key => :host_id
-        accepts_nested_attributes_for :host_ansible_roles, :allow_destroy => true
         has_many :ansible_roles, :through => :host_ansible_roles,
                                  :dependent => :destroy
         scoped_search :relation => :ansible_roles, :on => :name,
