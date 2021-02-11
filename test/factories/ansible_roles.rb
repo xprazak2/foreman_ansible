@@ -7,13 +7,13 @@ FactoryBot.define do
 
   factory :host_ansible_role do
     sequence(:position)
-    host_id { nil }
-    ansible_role_id { nil }
+    host
+    ansible_role
   end
 
   factory :hostgroup_ansible_role do
     sequence(:position)
-    hostgroup_id { nil }
-    ansible_role_id { nil }
+    hostgroup
+    ansible_role
   end
 end

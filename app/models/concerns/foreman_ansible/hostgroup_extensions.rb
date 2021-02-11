@@ -9,7 +9,7 @@ module ForemanAnsible
       has_many :hostgroup_ansible_roles, :foreign_key => :hostgroup_id
       has_many :ansible_roles, :through => :hostgroup_ansible_roles,
                                :dependent => :destroy
-
+      accepts_nested_attributes_for :hostgroup_ansible_roles, :allow_destroy => true
       audit_associations :ansible_roles
 
       def inherited_ansible_roles
