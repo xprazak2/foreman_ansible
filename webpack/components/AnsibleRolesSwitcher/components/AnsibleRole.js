@@ -6,14 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import AnsibleRoleActionButton from './AnsibleRoleActionButton';
 import '../AnsibleRolesSwitcher.scss';
 
-const AnsibleRole = ({
-  role,
-  icon,
-  onClick,
-  resourceName,
-  resourceId,
-  variablesUrl,
-}) => {
+const AnsibleRole = ({ role, icon, onClick, resourceName }) => {
   const text =
     resourceName === 'hostgroup'
       ? __('This Ansible role is inherited from parent host group')
@@ -27,7 +20,7 @@ const AnsibleRole = ({
 
   const clickHandler = (onClickFn, ansibleRole) => event => {
     event.preventDefault();
-    onClickFn(ansibleRole, variablesUrl, resourceName, resourceId);
+    onClickFn(ansibleRole);
   };
 
   const listItem = (click = undefined) => (

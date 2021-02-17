@@ -13,9 +13,6 @@ const AvailableRolesList = ({
   onListingChange,
   onAddRole,
   loading,
-  resourceName,
-  resourceId,
-  variablesUrl,
 }) => (
   <ListView>
     <div className="sticky-pagination">
@@ -34,9 +31,6 @@ const AvailableRolesList = ({
           role={role}
           icon="fa fa-plus-circle"
           onClick={onAddRole}
-          resourceName={resourceName}
-          resourceId={resourceId}
-          variablesUrl={variablesUrl}
         />
       ))}
     </LoadingState>
@@ -53,9 +47,6 @@ AvailableRolesList.propTypes = {
   onListingChange: PropTypes.func.isRequired,
   onAddRole: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  resourceName: PropTypes.string.isRequired,
-  resourceId: PropTypes.number.isRequired,
-  variablesUrl: PropTypes.string.isRequired,
 };
 
 export default AvailableRolesList;

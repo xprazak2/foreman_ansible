@@ -18,17 +18,11 @@ const fixtures = {
     assignedPagination: { page: 1, perPage: 12 },
     assignedRolesCount: 2,
     assignedRoles: [],
-    allAssignedRoles: [],
     unassignedRoles: [],
     initialAssignedRoles: [],
-    inheritedRoleIds: [],
-    resourceName: 'Host',
-    resourceId: 15,
-    variablesUrl: '/hosts/14/variables',
     error: { statusText: '', errorMsg: '' },
+    allAssignedRoles: [],
     availableRolesUrl: 'http://test/roles',
-    initFormObjectAttrs: noop,
-    getAnsibleVariables: noop,
   },
 };
 
