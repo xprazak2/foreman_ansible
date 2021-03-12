@@ -28,7 +28,7 @@ if defined? ForemanRemoteExecution
               template_invocation.template
             ),
             :name => host.name
-          )
+          ).merge(proxy_command_provider_inputs(template_invocation))
         end
 
         def secrets(host)
@@ -58,6 +58,25 @@ if defined? ForemanRemoteExecution
           true
         end
 
+        def provider_inputs
+          [
+            ForemanRemoteExecution::ProviderInput.new(
+              name: 'tags',
+              label: _('Tags'),
+              value: '',
+              value_type: 'plain',
+              description: 'Tags used for Ansible execution'
+            ),
+            ForemanRemoteExecution::ProviderInput.new(
+              name: 'tags_flag',
+              label: _('Tags Flag'),
+              value: '--tags',
+              description: 'Option whether to include or exclude tags',
+              options: "--tags\n--skip-tags"
+            ),
+          ]
+        end
+
         def proxy_operation_name
           'ansible-runner'
         end
@@ -67,6 +86,12 @@ if defined? ForemanRemoteExecution
         end
 
         private
+
+        def proxy_command_provider_inputs(template_invocation)
+          tags = template_invocation.provider_input_values.find_by(:name => 'tags')&.value || ''
+          tags_flag = template_invocation.provider_input_values.find_by(:name => 'tags_flag')&.value || ''
+          { :tags => tags, :tags_flag => tags_flag }
+        end
 
         def ansible_command?(template)
           template.remote_execution_features.

@@ -13,6 +13,8 @@ module ForemanAnsibleCore
         @root = working_dir
         @verbosity_level = action_input[:verbosity_level]
         @rex_command = action_input[:remote_execution_command]
+        @tags = action_input[:tags]
+        @tags_flag = action_input[:tags_flag]
       end
 
       def start
@@ -108,14 +110,19 @@ module ForemanAnsibleCore
       def start_ansible_runner
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
-        command = [env, 'ansible-runner', 'run', @root, '-p', 'playbook.yml']
-        command << verbosity if verbose?
-        initialize_command(*command)
-        logger.debug("[foreman_ansible] - Running command '#{command.join(' ')}'")
+        command = "ansible-runner run #{@root} -p playbook.yml #{cmdline} #{verbosity}"
+        initialize_command(env, command)
+        logger.debug("[foreman_ansible] - Running command '#{command}'")
+      end
+
+      def cmdline
+        tags_cmd = @tags.empty? ? '' : "#{@tags_flag} #{@tags}"
+
+        tags_cmd.empty? ? '' : "--cmdline \"#{tags_cmd}\""
       end
 
       def verbosity
-        '-' + 'v' * @verbosity_level.to_i
+        verbose? ? '-' + 'v' * @verbosity_level.to_i : ''
       end
 
       def verbose?
